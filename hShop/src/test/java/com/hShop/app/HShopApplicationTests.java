@@ -1,4 +1,4 @@
-package com.hShop.app;
+package com.hshop.app;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
