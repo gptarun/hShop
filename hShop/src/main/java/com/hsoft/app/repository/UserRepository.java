@@ -12,5 +12,5 @@ import com.hsoft.app.model.UserModel;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findAll();
-	UserModel findById(long userId);
+	User findById(long userId);
 }
