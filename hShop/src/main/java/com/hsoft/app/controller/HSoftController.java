@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hsoft.app.model.UserModel;
+import com.hsoft.app.model.User;
 import com.hsoft.app.repository.UserRepository;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -23,8 +23,8 @@ public class HSoftController {
 	}
 
 	@PostMapping("/create")
-	public String createUser(@RequestBody UserModel user) {
-		userRepo.save(new UserModel(user.getId(), user.getPassword()));
-		return "Created";
+	public String createUser(@RequestBody User user) {
+		userRepo.save(new User());
+		return "Created User";
 	}
 }
