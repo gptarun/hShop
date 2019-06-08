@@ -24,7 +24,7 @@ public class HSoftController {
 
 	@PostMapping("/create")
 	public String createUser(@RequestBody User user) {
-		userRepo.save(new User());
+		userRepo.save(user);
 		return "Created User";
 	}
 }
