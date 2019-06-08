@@ -1,5 +1,9 @@
 package com.hsoft.app.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +41,7 @@ public class HSoftController {
 		userRepo.save(user);
 		return "Created User";
 	}
-	
+
 	@PostMapping("/createRole")
 	public String createRole(@RequestBody Role role) {
 		roleRepo.save(role);
@@ -49,11 +53,16 @@ public class HSoftController {
 		moduleRepo.save(module);
 		return "Created module";
 	}
-	
+
 	@GetMapping("/getRole")
-	public String getRole(@RequestBody String roleName) {
-//		userRepo.save(user);
-		return "Created User";
+	public Map<Object, Object> getRole() {
+		List<Role> roles = roleRepo.findAll();
+		Map<Object, Object> roleMap = new HashMap<>();
+		for (Role roleObject : roles) {
+			roleMap.put(roleObject.getRoleId(), roleObject.getRoleName());
+		}
+
+		return roleMap;
 	}
-	
+
 }
