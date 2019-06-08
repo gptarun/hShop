@@ -30,4 +30,29 @@ public class Module {
 	@ManyToOne(optional = false)
     @JoinColumn(name="PARENT_MODULE_ID")
     private ParentModule parentModule;
+
+	public long getModuleId() {
+		return moduleId;
+	}
+
+	public void setModuleId(long moduleId) {
+		this.moduleId = moduleId;
+	}
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
+
+	public ParentModule getParentModule() {
+		return parentModule;
+	}
+
+	public void setParentModule(ParentModule parentModule) {
+		this.parentModule = parentModule;
+	}
+	
 }

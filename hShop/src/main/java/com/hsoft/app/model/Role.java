@@ -35,10 +35,6 @@ public class Role {
 	@JoinTable(name = "ROLE_MODULE", joinColumns = @JoinColumn(name = "ROLE_ID"), inverseJoinColumns = @JoinColumn(name = "MODULE_ID"))
 	private List<Module> modules;
 
-	public List<Module> getModules() {
-		return modules;
-	}
-
 	public long getRoleId() {
 		return roleId;
 	}
@@ -55,8 +51,12 @@ public class Role {
 		this.roleName = roleName;
 	}
 
+	public List<Module> getModules() {
+		return modules;
+	}
+
 	public void setModules(List<Module> modules) {
 		this.modules = modules;
 	}
-
+	
 }

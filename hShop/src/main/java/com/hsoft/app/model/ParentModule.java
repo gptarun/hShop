@@ -22,5 +22,22 @@ public class ParentModule {
 	private long parentModuleId;
 	
 	@Column(name = "module_name")
-	private String moduleName;
+	private String parentModuleName;
+
+	public long getParentModuleId() {
+		return parentModuleId;
+	}
+
+	public void setParentModuleId(long parentModuleId) {
+		this.parentModuleId = parentModuleId;
+	}
+
+	public String getParentModuleName() {
+		return parentModuleName;
+	}
+
+	public void setParentModuleName(String parentModuleName) {
+		this.parentModuleName = parentModuleName;
+	}
+	
 }

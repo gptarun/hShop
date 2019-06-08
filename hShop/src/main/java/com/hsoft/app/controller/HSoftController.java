@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hsoft.app.model.Module;
 import com.hsoft.app.model.Role;
 import com.hsoft.app.model.User;
+import com.hsoft.app.repository.ModuleRepository;
 import com.hsoft.app.repository.RoleRepository;
 import com.hsoft.app.repository.UserRepository;
 
@@ -23,9 +25,12 @@ public class HSoftController {
 
 	@Autowired
 	UserRepository userRepo;
-
+	
 	@Autowired
-	RoleRepository roleRepo;
+	private RoleRepository roleRepo;
+	
+	@Autowired
+	private ModuleRepository moduleRepo;
 
 	@GetMapping("/id")
 	public String getTestId() {
@@ -39,9 +44,15 @@ public class HSoftController {
 	}
 
 	@PostMapping("/createRole")
-	public String createRole(@RequestBody User user) {
-		userRepo.save(user);
-		return "Created User";
+	public String createRole(@RequestBody Role role) {
+		roleRepo.save(role);
+		return "Created role";
+	}
+	
+	@PostMapping("/createModule")
+	public String createModule(@RequestBody Module module) {
+		moduleRepo.save(module);
+		return "Created module";
 	}
 
 	@GetMapping("/getRole")
