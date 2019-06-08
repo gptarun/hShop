@@ -35,7 +35,7 @@ public class HSoftController {
 	}
 	
 	@GetMapping("/getRole")
-	public String getRole(@RequestBody String roleName) {
+	public String getRole() {
 //		userRepo.save(user);
 		return "Created User";
 	}
