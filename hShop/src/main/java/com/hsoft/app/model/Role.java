@@ -42,5 +42,21 @@ public class Role {
 	public List<Module> getModules() {
 	    return modules;
 	}
+
+	public long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(long roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 	
 }
