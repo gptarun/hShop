@@ -25,10 +25,10 @@ public class HSoftController {
 
 	@Autowired
 	UserRepository userRepo;
-	
+
 	@Autowired
 	private RoleRepository roleRepo;
-	
+
 	@Autowired
 	private ModuleRepository moduleRepo;
 
@@ -36,6 +36,13 @@ public class HSoftController {
 	public String getTestId() {
 		return "id";
 	}
+
+	/**
+	 * All the create requests will start from here..
+	 * 
+	 * @param user
+	 * @return
+	 */
 
 	@PostMapping("/createUser")
 	public String createUser(@RequestBody User user) {
@@ -48,22 +55,31 @@ public class HSoftController {
 		roleRepo.save(role);
 		return "Created role";
 	}
-	
+
 	@PostMapping("/createModule")
 	public String createModule(@RequestBody Module module) {
 		moduleRepo.save(module);
 		return "Created module";
 	}
 
-	@GetMapping("/getRole")
-	public List getRole() {
-		List<Role> roles = roleRepo.findAll();
-		List<Object> roleList = new ArrayList<>();
-		for (Role roleObject : roles) {
-			roleList.add(roleObject);
-		}
+	/**
+	 * All the get requests will start from here..
+	 * 
+	 * @return
+	 */
+	@GetMapping("/getUsers")
+	public List<User> getUser() {
+		return userRepo.findAll();
+	}
 
-		return roleList;
+	@GetMapping("/getRoles")
+	public List<Role> getRole() {
+		return roleRepo.findAll();
+	}
+
+	@GetMapping("/getModules")
+	public List<Module> getModule() {
+		return moduleRepo.findAll();
 	}
 
 }
