@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class User {
@@ -44,9 +44,8 @@ public class User {
 	@Column(name = "department")
 	private String department;
 	
-	@ManyToOne(optional = false)
-    @JoinColumn(name="ROLE_ID")
-    private Role role;
+	@Column(name = "role_id")
+    private long roleId;
 	
 	@Column(name = "status")
 	private String status;
@@ -58,14 +57,6 @@ public class User {
 	@NotBlank
 	private String password;
 	
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
 	public String getUserName() {
 		return userName;
 	}

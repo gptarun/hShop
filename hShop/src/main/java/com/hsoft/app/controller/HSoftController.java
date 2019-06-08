@@ -27,4 +27,17 @@ public class HSoftController {
 		userRepo.save(user);
 		return "Created User";
 	}
+	
+	@PostMapping("/createRole")
+	public String createRole(@RequestBody User user) {
+		userRepo.save(user);
+		return "Created User";
+	}
+	
+	@GetMapping("/getRole")
+	public String getRole(@RequestBody String roleName) {
+//		userRepo.save(user);
+		return "Created User";
+	}
+	
 }

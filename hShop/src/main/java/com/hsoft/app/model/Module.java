@@ -6,6 +6,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -24,4 +26,8 @@ public class Module {
 	
 	@Column(name = "module_name")
 	private String moduleName;
+	
+	@ManyToOne(optional = false)
+    @JoinColumn(name="PARENT_MODULE_ID")
+    private ParentModule parentModule;
 }
