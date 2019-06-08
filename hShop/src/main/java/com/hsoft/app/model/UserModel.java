@@ -15,14 +15,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Entity
+/*@Entity
 @Table(name = "public.user")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
+@JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)*/
 
 public class UserModel implements Serializable {
 
-	@Id
+/*	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long userId;
 
@@ -55,5 +55,5 @@ public class UserModel implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+*/
 }
