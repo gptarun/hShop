@@ -1,6 +1,6 @@
 package com.hsoft.app.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -31,15 +31,15 @@ public class Role {
 	@Column(name = "role")
 	private String roleName;
 	
-	private Set<Module> modules;
-	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 	        name = "ROLE_MODULE",
 	        joinColumns = @JoinColumn(name = "ROLE_ID"),
 	        inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
 	)
-	public Set<Module> getModules() {
+	private List<Module> modules;
+	
+	public List<Module> getModules() {
 	    return modules;
 	}
 	
