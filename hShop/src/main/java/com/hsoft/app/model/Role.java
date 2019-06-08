@@ -23,24 +23,40 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class Role {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long roleId;
-	
+
 	@Column(name = "role")
 	private String roleName;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-	        name = "ROLE_MODULE",
-	        joinColumns = @JoinColumn(name = "ROLE_ID"),
-	        inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
-	)
+	@JoinTable(name = "ROLE_MODULE", joinColumns = @JoinColumn(name = "ROLE_ID"), inverseJoinColumns = @JoinColumn(name = "MODULE_ID"))
 	private List<Module> modules;
-	
+
 	public List<Module> getModules() {
-	    return modules;
+		return modules;
 	}
-	
+
+	public long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(long roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
+	}
+
 }
