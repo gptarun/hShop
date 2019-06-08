@@ -1,7 +1,8 @@
 package com.hsoft.app.controller;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,10 +22,10 @@ public class HSoftController {
 
 	@Autowired
 	UserRepository userRepo;
-	
+
 	@Autowired
 	RoleRepository roleRepo;
-	
+
 	@GetMapping("/id")
 	public String getTestId() {
 		return "id";
@@ -35,22 +36,22 @@ public class HSoftController {
 		userRepo.save(user);
 		return "Created User";
 	}
-	
+
 	@PostMapping("/createRole")
 	public String createRole(@RequestBody User user) {
 		userRepo.save(user);
 		return "Created User";
 	}
-	
+
 	@GetMapping("/getRole")
-	public List<Object> getRole() {
+	public Map<Object, Object> getRole() {
 		List<Role> roles = roleRepo.findAll();
-		List<Object> roleNames = new ArrayList<>();
+		Map<Object, Object> roleMap = new HashMap<>();
 		for (Role roleObject : roles) {
-			roleNames.add(roleObject.getRoleName());
+			roleMap.put(roleObject.getRoleId(), roleObject.getRoleName());
 		}
-		
-		return roleNames;
+
+		return roleMap;
 	}
-	
+
 }
