@@ -1,12 +1,11 @@
 package com.hsoft.app.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
 public class User {
@@ -34,9 +33,8 @@ public class User {
 	@Column(name = "department")
 	private String department;
 	
-	@OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL,
-            mappedBy = "user")
+	@ManyToOne(optional = false)
+    @JoinColumn(name="ROLE_ID")
     private Role role;
 	
 	@Column(name = "status")
