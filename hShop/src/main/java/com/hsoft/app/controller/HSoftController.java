@@ -1,5 +1,6 @@
 package com.hsoft.app.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,14 +45,14 @@ public class HSoftController {
 	}
 
 	@GetMapping("/getRole")
-	public Map<Object, Object> getRole() {
+	public List getRole() {
 		List<Role> roles = roleRepo.findAll();
-		Map<Object, Object> roleMap = new HashMap<>();
+		List<Object> roleList = new ArrayList<>();
 		for (Role roleObject : roles) {
-			roleMap.put(roleObject.getRoleId(), roleObject.getRoleName());
+			roleList.add(roleObject);
 		}
 
-		return roleMap;
+		return roleList;
 	}
 
 }
