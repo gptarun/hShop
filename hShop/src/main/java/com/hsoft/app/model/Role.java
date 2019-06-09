@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,7 +26,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Role {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roleSequence")
+	@SequenceGenerator(name = "roleSequence", sequenceName = "ROLE_SEQ", allocationSize = 1)
 	private long roleId;
 
 	@Column(name = "role")

@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -20,43 +21,54 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class User {
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequence")
+	@SequenceGenerator(name = "userSequence", sequenceName = "USER_SEQ", allocationSize = 1)
 	private long userId;
-	
+
 	@Column(name = "first_name")
 	private String firstName;
-	
+
 	@Column(name = "middle_name")
 	private String middleName;
-	
+
 	@Column(name = "last_name")
 	private String lastName;
-	
+
 	@NotBlank
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "phone_number")
 	private String phoneNumber;
-	
-	@Column(name = "department")
-	private String department;
-	
-	@Column(name = "role_id")
-    private long roleId;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "dep_id")
+	private Department department;
+
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	@Column(name = "status")
 	private String status;
-	
+
 	@Column(name = "user_name")
 	private String userName;
 
 	@Column(name = "password")
 	@NotBlank
 	private String password;
-	
+
 	public String getUserName() {
 		return userName;
 	}
@@ -121,11 +133,11 @@ public class User {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getDepartment() {
+	public Department getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(String department) {
+	public void setDepartment(Department department) {
 		this.department = department;
 	}
 
@@ -136,5 +148,5 @@ public class User {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 }
