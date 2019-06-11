@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.config.JwtTokenUtil;
+import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.JwtRequest;
 import com.hsoft.app.model.JwtResponse;
 import com.hsoft.app.service.JwtUserDetailsService;
@@ -38,8 +39,17 @@ public class JwtAuthenticationController {
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
-		return ResponseEntity.ok(new JwtResponse(token));
+		JwtResponse response = null;
+		
+		if(token != null && !token.isEmpty()) {
+			String status = HShopConstant.TRUE;
+			response = new JwtResponse(token, status);
+		}else {
+			String status = HShopConstant.FALSE;
+			response = new JwtResponse(token, status);
+		}
+		
+		return ResponseEntity.ok(response);
 	}
 
 	private void authenticate(String username, String password) throws Exception {
@@ -50,5 +60,5 @@ public class JwtAuthenticationController {
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
-	}
+	}	
 }
