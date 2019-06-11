@@ -10,5 +10,5 @@ import com.hsoft.app.model.Module;
 @Repository
 public interface ModuleRepository extends JpaRepository<Module, Long> {
 	List<Module> findAll();
-	Module findById(long moduleId);
+	List<Module> findById(long moduleId);
 }

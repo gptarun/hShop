@@ -1,5 +1,6 @@
 package com.hsoft.app.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,9 +184,16 @@ public class HSoftController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			List<User> userByName = userRepo.findByUserName(user.getUserName());
+			List<RoleModuleTab> roleModuleId = roleModuleRepo
+					.findModuleIdByRoleId(userByName.get(0).getRole().getRoleId());
+			List<Module> modules = new ArrayList<>();
+			for (RoleModuleTab roleModuleTab : roleModuleId) {
+				modules.add(moduleRepo.findById(roleModuleTab.getModuleId()).get(0));
+			}
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "User found");
 			response.put(HShopConstant.DATA, userByName.get(0));
+			response.put(HShopConstant.MODULE, modules);
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);

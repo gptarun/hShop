@@ -15,12 +15,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "role_module",uniqueConstraints = {
-		@UniqueConstraint(columnNames = "ROLE_MODULE_ID")})
+@Table(name = "role_module", uniqueConstraints = { @UniqueConstraint(columnNames = "ROLE_MODULE_ID") })
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class RoleModuleTab {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roleModuleSequence")
 	@SequenceGenerator(name = "roleModuleSequence", sequenceName = "ROLE_MODULE_SEQ", allocationSize = 1)
@@ -29,10 +28,14 @@ public class RoleModuleTab {
 
 	@Column(name = "role_id")
 	private long roleId;
-	
+
 	@Column(name = "module_id")
 	private long moduleId;
-	
+
+	public RoleModuleTab() {
+		super();
+	}
+
 	public RoleModuleTab(long roleId, long moduleId) {
 		super();
 		this.roleId = roleId;
@@ -62,5 +65,5 @@ public class RoleModuleTab {
 	public void setModuleId(long moduleId) {
 		this.moduleId = moduleId;
 	}
-	
+
 }
