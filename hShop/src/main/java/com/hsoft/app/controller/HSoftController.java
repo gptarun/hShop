@@ -184,7 +184,8 @@ public class HSoftController {
 		try {
 			List<User> userByName = userRepo.findByUserName(user.getUserName());
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, userByName.get(0));
+			response.put(HShopConstant.MESSAGE, "User found");
+			response.put(HShopConstant.DATA, userByName.get(0));
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
