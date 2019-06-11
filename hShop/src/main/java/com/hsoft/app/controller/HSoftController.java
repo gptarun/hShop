@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,9 @@ public class HSoftController {
 	@Autowired
 	private ParentModuleRepository pmRepo;
 
+	@Autowired
+	private PasswordEncoder bcryptEncode;
+
 	@GetMapping("/id")
 	public String getTestId() {
 		return "id";
@@ -58,6 +62,7 @@ public class HSoftController {
 	public Map<String, String> createUser(@RequestBody User user) {
 		Map<String, String> response = new HashMap<>();
 		try {
+			user.setPassword(bcryptEncode.encode(user.getPassword()));
 			userRepo.save(user);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "User has been created");
