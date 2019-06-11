@@ -21,6 +21,7 @@ import com.hsoft.app.model.Module;
 import com.hsoft.app.model.ParentModule;
 import com.hsoft.app.model.Role;
 import com.hsoft.app.model.RoleModuleTab;
+import com.hsoft.app.model.TransactionLog;
 import com.hsoft.app.model.User;
 import com.hsoft.app.repository.DepartmentRepository;
 import com.hsoft.app.repository.LocationRepository;
@@ -28,6 +29,7 @@ import com.hsoft.app.repository.ModuleRepository;
 import com.hsoft.app.repository.ParentModuleRepository;
 import com.hsoft.app.repository.RoleModuleRepository;
 import com.hsoft.app.repository.RoleRepository;
+import com.hsoft.app.repository.TransactionLogRepository;
 import com.hsoft.app.repository.UserRepository;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -57,7 +59,10 @@ public class HSoftController {
 
 	@Autowired
 	private LocationRepository locationRepo;
-
+	
+	@Autowired
+	private TransactionLogRepository transactionLogRepo;
+	
 	@GetMapping("/id")
 	public String getTestId() {
 		return "id";
@@ -251,6 +256,21 @@ public class HSoftController {
 			userRepo.save(user.get(0));
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Password has been changed successfully");
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
+	
+	@PostMapping("/createLog")
+	public Map<String, String> createLog(@RequestBody TransactionLog transactionLog) {
+		Map<String, String> response = new HashMap<>();
+		try {
+			transactionLogRepo.save(transactionLog);
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "Department has been created");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
