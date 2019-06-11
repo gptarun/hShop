@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.RoleModule;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Department;
+import com.hsoft.app.model.Location;
 import com.hsoft.app.model.Module;
 import com.hsoft.app.model.ParentModule;
 import com.hsoft.app.model.Role;
 import com.hsoft.app.model.RoleModuleTab;
 import com.hsoft.app.model.User;
 import com.hsoft.app.repository.DepartmentRepository;
+import com.hsoft.app.repository.LocationRepository;
 import com.hsoft.app.repository.ModuleRepository;
 import com.hsoft.app.repository.ParentModuleRepository;
 import com.hsoft.app.repository.RoleModuleRepository;
@@ -45,12 +47,15 @@ public class HSoftController {
 
 	@Autowired
 	private ParentModuleRepository pmRepo;
-	
+
 	@Autowired
 	private RoleModuleRepository roleModuleRepo;
 
 	@Autowired
 	private PasswordEncoder bcryptEncode;
+
+	@Autowired
+	private LocationRepository locationRepo;
 
 	@GetMapping("/id")
 	public String getTestId() {
@@ -109,13 +114,13 @@ public class HSoftController {
 			return response;
 		}
 	}
-	
+
 	@PostMapping("/createRoleModMap")
 	public Map<String, String> createRoleModMap(@RequestBody RoleModule roleModule) {
 		Map<String, String> response = new HashMap<>();
 		try {
 			long roleId = roleModule.getRole().getRoleId();
-			for(long moduleId : roleModule.getModuleIds()) {
+			for (long moduleId : roleModule.getModuleIds()) {
 				roleModuleRepo.save(new RoleModuleTab(roleId, moduleId));
 			}
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
@@ -158,6 +163,36 @@ public class HSoftController {
 		}
 	}
 
+	@PostMapping("/createLocation")
+	public Map<String, String> createLocation(@RequestBody Location location) {
+		Map<String, String> response = new HashMap<>();
+		try {
+			locationRepo.save(location);
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "Location has been added");
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
+
+	@PostMapping("/getUser")
+	public Map<String, Object> getUserByName(@RequestBody User user) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			List<User> userByName = userRepo.findByUserName(user.getUserName());
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, userByName.get(0));
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
+
 	/**
 	 * All the GET requests will start from here..
 	 * 
@@ -189,17 +224,24 @@ public class HSoftController {
 		return depRepo.findAll();
 	}
 
+	@GetMapping("/getLocations")
+	public List<Location> getLocations() {
+		return locationRepo.findAll();
+	}
+
 	/**
 	 * Update queries from here......
 	 */
 
 	@PostMapping("/changePassword")
-	public Map<String, String> changePassword() {
+	public Map<String, String> changePassword(@RequestBody User userObj) {
 		Map<String, String> response = new HashMap<>();
 		try {
-			// TODO: Need to place logic to change the password
+			List<User> user = userRepo.findByUserName(userObj.getUserName());
+			user.get(0).setPassword(bcryptEncode.encode(userObj.getPassword()));
+			userRepo.save(user.get(0));
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Department has been created");
+			response.put(HShopConstant.MESSAGE, "Password has been changed successfully");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
