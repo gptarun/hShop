@@ -2,12 +2,14 @@ package com.hsoft.app.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,10 +61,10 @@ public class HSoftController {
 
 	@Autowired
 	private LocationRepository locationRepo;
-	
+
 	@Autowired
 	private TransactionLogRepository transactionLogRepo;
-	
+
 	@GetMapping("/id")
 	public String getTestId() {
 		return "id";
@@ -184,21 +186,13 @@ public class HSoftController {
 		}
 	}
 
-	@PostMapping("/getUser")
-	public Map<String, Object> getUserByName(@RequestBody User user) {
-		Map<String, Object> response = new HashMap<>();
+	@PostMapping("/createUserLog")
+	public Map<String, String> createLog(@RequestBody TransactionLog transactionLog) {
+		Map<String, String> response = new HashMap<>();
 		try {
-			List<User> userByName = userRepo.findByUserName(user.getUserName());
-			List<RoleModuleTab> roleModuleId = roleModuleRepo
-					.findModuleIdByRoleId(userByName.get(0).getRole().getRoleId());
-			List<Module> modules = new ArrayList<>();
-			for (RoleModuleTab roleModuleTab : roleModuleId) {
-				modules.add(moduleRepo.findById(roleModuleTab.getModuleId()).get(0));
-			}
+			transactionLogRepo.save(transactionLog);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "User found");
-			response.put(HShopConstant.DATA, userByName.get(0));
-			response.put(HShopConstant.MODULE, modules);
+			response.put(HShopConstant.MESSAGE, "Logs has been created");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
@@ -243,6 +237,31 @@ public class HSoftController {
 		return locationRepo.findAll();
 	}
 
+	@PostMapping("/getUser")
+	public Map<String, Object> getUserByName(@RequestBody User user) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			List<User> userByName = userRepo.findByUserName(user.getUserName());
+			List<RoleModuleTab> roleModuleId = roleModuleRepo
+					.findModuleIdByRoleId(userByName.get(0).getRole().getRoleId());
+			List<String> modules = new ArrayList<>();
+
+			for (RoleModuleTab roleModuleTab : roleModuleId) {
+				modules.add(moduleRepo.findById(roleModuleTab.getModuleId()).get(0).getModuleName());
+			}
+
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "User found");
+			response.put(HShopConstant.DATA, userByName.get(0));
+			response.put(HShopConstant.MODULE, modules);
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
+
 	/**
 	 * Update queries from here......
 	 */
@@ -263,14 +282,16 @@ public class HSoftController {
 			return response;
 		}
 	}
-	
-	@PostMapping("/createLog")
-	public Map<String, String> createLog(@RequestBody TransactionLog transactionLog) {
+
+	@DeleteMapping("/deleteUsers")
+	public Map<String, String> deleteUser(@RequestBody List<User> userObj) {
 		Map<String, String> response = new HashMap<>();
 		try {
-			transactionLogRepo.save(transactionLog);
+			for (User user : userObj) {
+				userRepo.deleteById(user.getUserId());
+			}
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Department has been created");
+			response.put(HShopConstant.MESSAGE, "User has been deleted successfully");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class TransactionLog {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transactionLogSequence")
 	@SequenceGenerator(name = "transactionLogSequence", sequenceName = "TRANSACTION_LOG_SEQ", allocationSize = 1)
@@ -30,12 +30,15 @@ public class TransactionLog {
 
 	@Column(name = "username")
 	private String userName;
-	
+
 	@Column(name = "location")
 	private String location;
-	
+
 	@Column(name = "log_date")
 	private Date logDate;
+
+	@Column(name = "action")
+	private String action;
 
 	public long getTransactionLogId() {
 		return transactionLogId;
@@ -68,5 +71,13 @@ public class TransactionLog {
 	public void setLogDate(Date logDate) {
 		this.logDate = logDate;
 	}
-	
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
 }

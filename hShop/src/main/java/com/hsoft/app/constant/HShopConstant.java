@@ -8,4 +8,5 @@ public class HShopConstant {
 	public static final String FALSE = "false";
 	public static final String DATA = "data";
 	public static final String MODULE = "module";
+	public static final String MAPPING = "mapping";
 }
