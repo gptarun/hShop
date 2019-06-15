@@ -22,4 +22,24 @@ public class Ward {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wardSequence")
 	@SequenceGenerator(name = "wardSequence", sequenceName = "WARD_SEQ", allocationSize = 1)
 	private long wardId;
+	
+	private String wardName;
+
+	public long getWardId() {
+		return wardId;
+	}
+
+	public void setWardId(long wardId) {
+		this.wardId = wardId;
+	}
+
+	public String getWardName() {
+		return wardName;
+	}
+
+	public void setWardName(String wardName) {
+		this.wardName = wardName;
+	}
+	
+	
 }

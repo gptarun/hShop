@@ -7,6 +7,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -74,6 +76,18 @@ public class Patient {
 	private String highestEducation;
 	private String occupation;
 	private String accommodationType;
+
+	@ManyToOne
+	@JoinColumn(name = "ward_id")
+	private Ward ward;
+
+	public Ward getWard() {
+		return ward;
+	}
+
+	public void setWard(Ward ward) {
+		this.ward = ward;
+	}
 
 	public long getPatientId() {
 		return patientId;
