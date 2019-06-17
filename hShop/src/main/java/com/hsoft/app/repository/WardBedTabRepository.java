@@ -10,4 +10,6 @@ import com.hsoft.app.model.WardBedTab;
 public interface WardBedTabRepository extends JpaRepository<WardBedTab, Long> {
 
 	List<Bed> findByWardId(long wardId);
+	List<WardBedTab> findByWardIdAndAssignedPatientId(long wardId, long assignedPatientId);
+	WardBedTab findByWardIdAndBedId(long wardId, long bedId);
 }

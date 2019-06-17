@@ -72,4 +72,8 @@ public class WardBedTab {
 		this.assignedPatientId = assignedPatientId;
 	}
 
+	public WardBedTab() {
+		super();
+	}
+
 }

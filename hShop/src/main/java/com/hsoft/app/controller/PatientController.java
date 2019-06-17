@@ -1,5 +1,6 @@
 package com.hsoft.app.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,10 +79,13 @@ public class PatientController {
 	}
 
 	@PostMapping("/createBed")
-	public Map<String, String> createBed(@RequestBody Bed bed) {
+	public Map<String, String> createBed(@RequestBody List<Bed> beds) {
 		Map<String, String> response = new HashMap<>();
 		try {
-			bedRepo.save(bed);
+			for (Bed bed : beds) {
+				bedRepo.save(bed);
+			}
+
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Bed has been created");
 			return response;
@@ -96,6 +100,7 @@ public class PatientController {
 	public Map<String, String> createWardBed(@RequestBody WardBean wardBean) {
 		Map<String, String> response = new HashMap<>();
 		try {
+			//TODO:Need to fix the new entry. Use the logic of assignBed method to stop overlapping
 			long wardId = wardBean.getWardId();
 			for (Long bedId : wardBean.getBedId()) {
 				wardBedRepo.save(new WardBedTab(wardId, bedId));
@@ -110,18 +115,33 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping("/assignPatient")
-	public Map<String, String> createWardBed(@RequestBody Object wardBean) {
-		Map<String, String> response = new HashMap<>();
+	@PostMapping("/getVacantBeds")
+	public List<Long> getVacantBeds(@RequestBody WardBean wardBean) {
+		List<Long> unoccupiedBeds = new ArrayList<>();
+		List<WardBedTab> wardBedTabs = new ArrayList<>();
 		try {
-			// TODO:Need to assign a Patient to the existing ward and unoccupied beds
-			/*
-			 * 1st drop down will get the ward lists After selecting the ward, Next drop
-			 * down will give the unoccupied beds of the perticular ward id then we will
-			 * assign the bed to the Patient.
-			 */
+			wardBedTabs = wardBedRepo.findByWardIdAndAssignedPatientId(wardBean.getWardId(), 0L);
+
+			for (WardBedTab wardBedTab : wardBedTabs) {
+				unoccupiedBeds.add(wardBedTab.getBedId());
+			}
+			return unoccupiedBeds;
+		} catch (Exception e) {
+			unoccupiedBeds.add(0L);
+			return unoccupiedBeds;
+		}
+	}
+
+	@PostMapping("/assignBed")
+	public Map<String, Object> assignBed(@RequestBody WardBean wardBean) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),wardBean.getBedId().get(0));
+			wardBed.setAssignedPatientId(wardBean.getAssignedPatientId());
+			wardBedRepo.save(wardBed);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Ward Bed Mapping has been created");
+			response.put(HShopConstant.MESSAGE, "Patient has been assigned");
+			response.put(HShopConstant.DATA, wardBed);
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
