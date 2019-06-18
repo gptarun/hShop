@@ -181,10 +181,13 @@ public class PatientController {
 			long assignpatient = wardBean.getAssignedPatientId();
 			WardBedTab wardBedassign = wardBedRepo.findByassignedPatientId(wardBean.getAssignedPatientId());
 			wardBedassign.setAssignedPatientId(0L);
+			wardBedassign.setAdmissionDate(null);
+			wardBedassign.setDoctorName(null);
 			wardBedRepo.save(wardBedassign);
 
 			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
 			wardBed.setAssignedPatientId(assignpatient);
+			wardBed.setAdmissionDate(wardBean.getAdmissionDate());
 			wardBedRepo.save(wardBed);
 
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
