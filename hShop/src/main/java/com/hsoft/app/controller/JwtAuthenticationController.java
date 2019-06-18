@@ -19,7 +19,7 @@ import com.hsoft.app.model.JwtResponse;
 import com.hsoft.app.service.JwtUserDetailsService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class JwtAuthenticationController {
 
 	@Autowired

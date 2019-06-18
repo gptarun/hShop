@@ -2,7 +2,6 @@ package com.hsoft.app.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ import com.hsoft.app.repository.RoleRepository;
 import com.hsoft.app.repository.TransactionLogRepository;
 import com.hsoft.app.repository.UserRepository;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class HSoftController {
 

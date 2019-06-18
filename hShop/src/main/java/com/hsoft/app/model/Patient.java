@@ -27,6 +27,8 @@ public class Patient {
 	@SequenceGenerator(name = "patientSequence", sequenceName = "PATIENT_SEQ", allocationSize = 1)
 	private long patientId;
 
+	private String patientNumber;
+
 	private String patientCategory;
 	private int clinicId;
 
@@ -423,6 +425,14 @@ public class Patient {
 
 	public void setAccommodationType(String accommodationType) {
 		this.accommodationType = accommodationType;
+	}
+
+	public String getPatientNumber() {
+		return patientNumber;
+	}
+
+	public void setPatientNumber(String patientNumber) {
+		this.patientNumber = patientNumber;
 	}
 
 }

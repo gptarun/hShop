@@ -29,7 +29,7 @@ import com.hsoft.app.repository.WardRepository;
  * @author Tarun
  *
  */
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class PatientController {
 
