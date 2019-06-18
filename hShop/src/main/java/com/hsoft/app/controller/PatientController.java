@@ -55,7 +55,7 @@ public class PatientController {
 
 	@Autowired
 	WardBedTabRepository wardBedRepo;
-	
+
 	@Autowired
 	DoctorRepository doctorRepo;
 
@@ -67,8 +67,7 @@ public class PatientController {
 		Map<String, String> response = new HashMap<>();
 		try {
 			if (imageValue != null) {
-				File file = new File(
-						"E:/Freelancing/My Projects/hSoft_data/image_data/" + patient.getPatientNumber() + ".jpg");
+				File file = new File(filePath + patient.getPatientNumber() + ".jpg");
 				byte[] byteImage = Base64.decodeBase64(imageValue);
 				OutputStream os = new FileOutputStream(file);
 				os.write(byteImage);
@@ -199,7 +198,7 @@ public class PatientController {
 		}
 
 	}
-	
+
 	@PostMapping("/createDoctor")
 	public Map<String, String> createDoctor(@RequestBody Doctor doctor) {
 		Map<String, String> response = new HashMap<>();
@@ -246,14 +245,14 @@ public class PatientController {
 	public Patient getPatient(@RequestBody Patient patient) {
 		return patientRepo.findByPatientId(patient.getPatientId());
 	}
-	
+
 	@GetMapping("/getDoctors")
 	public List<Doctor> getDoctors() {
 		return doctorRepo.findAll();
 	}
 
 	@PostMapping("/getDoctor")
-	public Doctor getDoctor(@RequestBody Doctor doctor ) {
+	public Doctor getDoctor(@RequestBody Doctor doctor) {
 		return doctorRepo.findByDoctorId(doctor.getDoctorId());
 	}
 
@@ -274,6 +273,7 @@ public class PatientController {
 
 	/**
 	 * This API is to get the wild card search list of the patient number.
+	 * 
 	 * @param patient
 	 * @return
 	 */
