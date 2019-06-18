@@ -24,11 +24,13 @@ import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
+import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.BedRepository;
 import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientRepository;
+import com.hsoft.app.repository.SchemeRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
 
@@ -59,6 +61,9 @@ public class PatientController {
 	@Autowired
 	DoctorRepository doctorRepo;
 
+	@Autowired
+	private SchemeRepository schemeRepo;
+	
 	/**
 	 * create
 	 */
@@ -297,4 +302,19 @@ public class PatientController {
 		return patientNumbers;
 	}
 
+	@PostMapping("/createScheme")
+	public Map<String, String> createScheme(@RequestBody Scheme scheme) {
+		Map<String, String> response = new HashMap<>();
+		try {
+			schemeRepo.save(scheme);
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "Bed has been created");
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
+	
 }
