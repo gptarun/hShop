@@ -149,8 +149,34 @@ public class PatientController {
 			return response;
 		}
 	}
+	
+	@PostMapping("/changeBed")
+	public Map<String, Object> changeBed(@RequestBody WardBean wardBean){
+		Map<String, Object> response = new HashMap<>();
+		try {
+			long assignpatient=wardBean.getAssignedPatientId();
+		WardBedTab wardBedassign = wardBedRepo.findByassignedPatientId(wardBean.getAssignedPatientId());
+		wardBedassign.setAssignedPatientId(0L);
+		wardBedRepo.save(wardBedassign);
+		
+		WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),wardBean.getBedId().get(0));
+		wardBed.setAssignedPatientId(assignpatient);
+		wardBedRepo.save(wardBed);
+		
+		response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+		response.put(HShopConstant.MESSAGE, "Patient bed has been changed");
+		response.put(HShopConstant.DATA, wardBedassign);
+		return response;
+		}
+		catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+		
+	}
 
-	/**
+/**
 	 * Update
 	 */
 	@PutMapping("/updatePatient")
