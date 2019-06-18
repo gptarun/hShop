@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Bed;
+import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.BedRepository;
+import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
@@ -53,6 +55,9 @@ public class PatientController {
 
 	@Autowired
 	WardBedTabRepository wardBedRepo;
+	
+	@Autowired
+	DoctorRepository doctorRepo;
 
 	/**
 	 * create
@@ -156,6 +161,8 @@ public class PatientController {
 		try {
 			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
 			wardBed.setAssignedPatientId(wardBean.getAssignedPatientId());
+			wardBed.setDoctorName(wardBean.getDoctorName());
+			wardBed.setAdmissionDate(wardBean.getAdmissionDate());
 			wardBedRepo.save(wardBed);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been assigned");
@@ -192,6 +199,21 @@ public class PatientController {
 		}
 
 	}
+	
+	@PostMapping("/createDoctor")
+	public Map<String, String> createDoctor(@RequestBody Doctor doctor) {
+		Map<String, String> response = new HashMap<>();
+		try {
+			doctorRepo.save(doctor);
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "Doctor has been created");
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
 
 	/**
 	 * Update
@@ -223,6 +245,16 @@ public class PatientController {
 	@PostMapping("/getPatient")
 	public Patient getPatient(@RequestBody Patient patient) {
 		return patientRepo.findByPatientId(patient.getPatientId());
+	}
+	
+	@GetMapping("/getDoctors")
+	public List<Doctor> getDoctors() {
+		return doctorRepo.findAll();
+	}
+
+	@PostMapping("/getDoctor")
+	public Doctor getDoctor(@RequestBody Doctor doctor ) {
+		return doctorRepo.findByDoctorId(doctor.getDoctorId());
 	}
 
 	@GetMapping("/getWards")
