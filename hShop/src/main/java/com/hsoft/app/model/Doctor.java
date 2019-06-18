@@ -24,7 +24,7 @@ public class Doctor {
 	@SequenceGenerator(name = "docSequence", sequenceName = "DOC_SEQ", allocationSize = 1)
 	private long doctorId;
 
-	@Column(name = "doctorName")
+	@Column(name = "doctor_name")
 	private String doctorName;
 	
 	public long getDoctorId() {
