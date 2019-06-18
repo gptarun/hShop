@@ -1,11 +1,18 @@
 package com.hsoft.app.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.hsoft.app.model.Patient;
 
 public interface PatientRepository extends JpaRepository<Patient, Long> {
-	
+
 	Patient findByPatientId(long id);
+
+	@Query(value = "SELECT * FROM Patient p WHERE p.patient_number LIKE CONCAT('%',:searchTerm,'%')", nativeQuery = true)
+	List<Patient> searchWithJPQLQuery(@Param("searchTerm") String searchTerm);
 
 }

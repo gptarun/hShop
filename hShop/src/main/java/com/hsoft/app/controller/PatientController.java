@@ -1,16 +1,22 @@
 package com.hsoft.app.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.bean.WardBean;
@@ -33,6 +39,9 @@ import com.hsoft.app.repository.WardRepository;
 @RestController
 public class PatientController {
 
+	@Value("${file.upload-dir}")
+	private String filePath;
+
 	@Autowired
 	PatientRepository patientRepo;
 
@@ -49,9 +58,17 @@ public class PatientController {
 	 * create
 	 */
 	@PostMapping("/createPatient")
-	public Map<String, String> createPatient(@RequestBody Patient patient) {
+	public Map<String, String> createPatient(@RequestBody Patient patient, @RequestParam("photo") String imageValue) {
 		Map<String, String> response = new HashMap<>();
 		try {
+			if (imageValue != null) {
+				File file = new File(
+						"E:/Freelancing/My Projects/hSoft_data/image_data/" + patient.getPatientNumber() + ".jpg");
+				byte[] byteImage = Base64.decodeBase64(imageValue);
+				OutputStream os = new FileOutputStream(file);
+				os.write(byteImage);
+				os.close();
+			}
 			patientRepo.save(patient);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been created");
@@ -100,7 +117,8 @@ public class PatientController {
 	public Map<String, String> createWardBed(@RequestBody WardBean wardBean) {
 		Map<String, String> response = new HashMap<>();
 		try {
-			//TODO:Need to fix the new entry. Use the logic of assignBed method to stop overlapping
+			// TODO:Need to fix the new entry. Use the logic of assignBed method to stop
+			// overlapping
 			long wardId = wardBean.getWardId();
 			for (Long bedId : wardBean.getBedId()) {
 				wardBedRepo.save(new WardBedTab(wardId, bedId));
@@ -136,7 +154,7 @@ public class PatientController {
 	public Map<String, Object> assignBed(@RequestBody WardBean wardBean) {
 		Map<String, Object> response = new HashMap<>();
 		try {
-			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),wardBean.getBedId().get(0));
+			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
 			wardBed.setAssignedPatientId(wardBean.getAssignedPatientId());
 			wardBedRepo.save(wardBed);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
@@ -149,34 +167,33 @@ public class PatientController {
 			return response;
 		}
 	}
-	
-	@PostMapping("/changeBed")
-	public Map<String, Object> changeBed(@RequestBody WardBean wardBean){
+
+	@PostMapping("/wardTransfer")
+	public Map<String, Object> wardTransfer(@RequestBody WardBean wardBean) {
 		Map<String, Object> response = new HashMap<>();
 		try {
-			long assignpatient=wardBean.getAssignedPatientId();
-		WardBedTab wardBedassign = wardBedRepo.findByassignedPatientId(wardBean.getAssignedPatientId());
-		wardBedassign.setAssignedPatientId(0L);
-		wardBedRepo.save(wardBedassign);
-		
-		WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),wardBean.getBedId().get(0));
-		wardBed.setAssignedPatientId(assignpatient);
-		wardBedRepo.save(wardBed);
-		
-		response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-		response.put(HShopConstant.MESSAGE, "Patient bed has been changed");
-		response.put(HShopConstant.DATA, wardBedassign);
-		return response;
-		}
-		catch (Exception e) {
+			long assignpatient = wardBean.getAssignedPatientId();
+			WardBedTab wardBedassign = wardBedRepo.findByassignedPatientId(wardBean.getAssignedPatientId());
+			wardBedassign.setAssignedPatientId(0L);
+			wardBedRepo.save(wardBedassign);
+
+			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
+			wardBed.setAssignedPatientId(assignpatient);
+			wardBedRepo.save(wardBed);
+
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "Patient bed has been changed");
+			response.put(HShopConstant.DATA, wardBedassign);
+			return response;
+		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
 			response.put(HShopConstant.MESSAGE, e.toString());
 			return response;
 		}
-		
+
 	}
 
-/**
+	/**
 	 * Update
 	 */
 	@PutMapping("/updatePatient")
@@ -221,6 +238,31 @@ public class PatientController {
 	@PostMapping("/getBedPerWard")
 	public List<Bed> getBedPerWard(@RequestBody WardBedTab wardBedTab) {
 		return wardBedRepo.findByWardId(wardBedTab.getWardId());
+	}
+
+	/**
+	 * This API is to get the wild card search list of the patient number.
+	 * @param patient
+	 * @return
+	 */
+	@PostMapping("/getPatientNumber")
+	public List<String> getPatientNumber(@RequestBody Patient patient) {
+		List<String> patientNumbers = new ArrayList<>();
+		List<Patient> patientList = patientRepo.searchWithJPQLQuery(patient.getPatientNumber());
+		for (Patient patientObj : patientList) {
+			patientNumbers.add(patientObj.getPatientNumber());
+		}
+		return patientNumbers;
+	}
+
+	@GetMapping("/getPatientNumbers")
+	public List<String> getPatientNumbers() {
+		List<Patient> patients = patientRepo.findAll();
+		List<String> patientNumbers = new ArrayList<>();
+		for (Patient patient : patients) {
+			patientNumbers.add(patient.getPatientNumber());
+		}
+		return patientNumbers;
 	}
 
 }
