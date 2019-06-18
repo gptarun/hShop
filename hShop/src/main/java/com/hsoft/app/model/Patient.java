@@ -31,7 +31,7 @@ public class Patient {
 
 	private String patientCategory;
 	private int clinicId;
-
+	
 	private String firstName;
 	private String lastName;
 	private String maritalStatus;
@@ -82,7 +82,7 @@ public class Patient {
 	@ManyToOne
 	@JoinColumn(name = "ward_id")
 	private Ward ward;
-
+	
 	public Ward getWard() {
 		return ward;
 	}

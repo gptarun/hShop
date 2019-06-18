@@ -13,4 +13,6 @@ public interface WardBedTabRepository extends JpaRepository<WardBedTab, Long> {
 	List<WardBedTab> findByWardIdAndAssignedPatientId(long wardId, long assignedPatientId);
 	WardBedTab findByWardIdAndBedId(long wardId, long bedId);
 	WardBedTab findByassignedPatientId(long assignedPatientId);
+	WardBedTab findByDoctorName(String doctorName);
+	
 }

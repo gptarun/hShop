@@ -1,5 +1,7 @@
 package com.hsoft.app.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -33,6 +35,30 @@ public class WardBedTab {
 
 	@Column(name = "assigned_patient_id")
 	private long assignedPatientId;
+	
+	@Column(name = "doctor_name")
+	private String doctorName;
+	
+	@Column(name = "admission_date")
+	private Date admissionDate;
+	
+	
+
+	public Date getAdmissionDate() {
+		return admissionDate;
+	}
+
+	public void setAdmissionDate(Date admissionDate) {
+		this.admissionDate = admissionDate;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
 
 	public WardBedTab(long wardId, long bedId) {
 		super();

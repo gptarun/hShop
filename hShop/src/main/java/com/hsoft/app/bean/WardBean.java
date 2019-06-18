@@ -1,5 +1,6 @@
 package com.hsoft.app.bean;
 
+import java.util.Date;
 import java.util.List;
 
 public class WardBean {
@@ -8,6 +9,24 @@ public class WardBean {
 	private long wardId;
 	private List<Long> bedId;
 	private long assignedPatientId;
+	private String doctorName;
+	private Date admissionDate;
+
+	public Date getAdmissionDate() {
+		return admissionDate;
+	}
+
+	public void setAdmissionDate(Date admissionDate) {
+		this.admissionDate = admissionDate;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
 
 	public long getWardBedId() {
 		return wardBedId;
