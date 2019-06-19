@@ -2,6 +2,7 @@ package com.hsoft.app.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class Patient {
 
 	private String patientCategory;
 	private int clinicId;
-	
+
 	private String firstName;
 	private String lastName;
 	private String maritalStatus;
@@ -45,7 +46,7 @@ public class Patient {
 	private String idNumber;
 	private Date expiryDate;
 
-	private int phoneNumber;
+	private String phoneNumber;
 	private String email;
 	private String address;
 	private String nationality;
@@ -53,7 +54,7 @@ public class Patient {
 
 	private String nokName;
 	private String nokRelationship;
-	private int nokPhoneNumber;
+	private String nokPhoneNumber;
 	private String nokAddress;
 
 	private String cardHolderName;
@@ -78,11 +79,13 @@ public class Patient {
 	private String highestEducation;
 	private String occupation;
 	private String accommodationType;
+	@Column(name = "encoded_image", length = 10000000)
+	private String encodedImage;
 
 	@ManyToOne
 	@JoinColumn(name = "ward_id")
 	private Ward ward;
-	
+
 	public Ward getWard() {
 		return ward;
 	}
@@ -203,11 +206,11 @@ public class Patient {
 		this.expiryDate = expiryDate;
 	}
 
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
@@ -259,11 +262,11 @@ public class Patient {
 		this.nokRelationship = nokRelationship;
 	}
 
-	public int getNokPhoneNumber() {
+	public String getNokPhoneNumber() {
 		return nokPhoneNumber;
 	}
 
-	public void setNokPhoneNumber(int nokPhoneNumber) {
+	public void setNokPhoneNumber(String nokPhoneNumber) {
 		this.nokPhoneNumber = nokPhoneNumber;
 	}
 
@@ -433,6 +436,14 @@ public class Patient {
 
 	public void setPatientNumber(String patientNumber) {
 		this.patientNumber = patientNumber;
+	}
+
+	public String getEncodedImage() {
+		return encodedImage;
+	}
+
+	public void setEncodedImage(String encodedImage) {
+		this.encodedImage = encodedImage;
 	}
 
 }
