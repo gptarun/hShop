@@ -24,12 +24,14 @@ import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
+import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.BedRepository;
 import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientRepository;
+import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.SchemeRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
@@ -64,6 +66,9 @@ public class PatientController {
 	@Autowired
 	private SchemeRepository schemeRepo;
 	
+	@Autowired
+	PrefixSuffixRepository prefixSuffixRepo;
+	
 	/**
 	 * create
 	 */
@@ -78,6 +83,10 @@ public class PatientController {
 				os.write(byteImage);
 				os.close();
 			}
+			//long PatientNumber=patientRepo.currentValue();
+			//PatientNumber++;
+			//List<PrefixSuffix> presuf=prefixSuffixRepo.findAll();
+			//TODO: Need to write a logic to save prefix and suffix
 			patientRepo.save(patient);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been created");
@@ -126,8 +135,6 @@ public class PatientController {
 	public Map<String, String> createWardBed(@RequestBody WardBean wardBean) {
 		Map<String, String> response = new HashMap<>();
 		try {
-			// TODO:Need to fix the new entry. Use the logic of assignBed method to stop
-			// overlapping
 			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
 			if(wardBed==null)
 			{
