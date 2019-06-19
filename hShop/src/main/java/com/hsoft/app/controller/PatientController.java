@@ -128,6 +128,9 @@ public class PatientController {
 		try {
 			// TODO:Need to fix the new entry. Use the logic of assignBed method to stop
 			// overlapping
+			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
+			if(wardBed==null)
+			{
 			long wardId = wardBean.getWardId();
 			for (Long bedId : wardBean.getBedId()) {
 				wardBedRepo.save(new WardBedTab(wardId, bedId));
@@ -135,6 +138,13 @@ public class PatientController {
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Ward Bed Mapping has been created");
 			return response;
+			}
+			else
+			{
+				response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+				response.put(HShopConstant.MESSAGE, "Ward Bed Mapping already exist");
+				return response;
+			}
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
 			response.put(HShopConstant.MESSAGE, e.toString());
