@@ -12,12 +12,12 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
 	Patient findByPatientId(long id);
 
+	Patient findByPatientIdOrPatientNumber(long patientId, String patientNumnber);
+
 	@Query(value = "SELECT * FROM Patient p WHERE p.patient_number LIKE CONCAT('%',:searchTerm,'%')", nativeQuery = true)
 	List<Patient> searchWithJPQLQuery(@Param("searchTerm") String searchTerm);
-	
+
 	@Query(value = " select currval('Patient_id_seq')", nativeQuery = true)
-	long currentValue(); 
-    
-	
-    	
+	long currentValue();
+
 }

@@ -26,11 +26,12 @@ public class PatientDischarge {
 	private long patientDischargeId;
 
 	private Date dischargeDate;
-	private boolean dischargeStatus;
+	private String dischargeStatus;
 	private String finalDiagnosis;
 	private String consultant;
-	@Column(name = "is_summary_written", length = 500)
+	@Column(name = "is_summary_written")
 	private boolean isSummaryWritten;
+	@Column(name = "other_comments", length = 500)
 	private String otherComments;
 
 	public long getPatientDischargeId() {
@@ -49,11 +50,11 @@ public class PatientDischarge {
 		this.dischargeDate = dischargeDate;
 	}
 
-	public boolean isDischargeStatus() {
+	public String getDischargeStatus() {
 		return dischargeStatus;
 	}
 
-	public void setDischargeStatus(boolean dischargeStatus) {
+	public void setDischargeStatus(String dischargeStatus) {
 		this.dischargeStatus = dischargeStatus;
 	}
 

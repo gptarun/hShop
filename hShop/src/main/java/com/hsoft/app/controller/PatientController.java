@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.bean.WardBean;
@@ -30,6 +31,7 @@ import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.SchemeRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
+import com.hsoft.app.service.PatientService;
 
 /**
  * 
@@ -63,6 +65,10 @@ public class PatientController {
 
 	@Autowired
 	PatientDischargeRepository patientDischargeRepo;
+
+	@Autowired
+	PatientService patientService;
+
 	/**
 	 * create
 	 */
@@ -185,20 +191,14 @@ public class PatientController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			long assignpatient = wardBean.getAssignedPatientId();
-			WardBedTab wardBedassign = wardBedRepo.findByassignedPatientId(wardBean.getAssignedPatientId());
-			wardBedassign.setAssignedPatientId(0L);
-			wardBedassign.setAdmissionDate(null);
-			wardBedassign.setDoctorName(null);
-			wardBedRepo.save(wardBedassign);
-
-			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
-			wardBed.setAssignedPatientId(assignpatient);
-			wardBed.setAdmissionDate(wardBean.getAdmissionDate());
-			wardBedRepo.save(wardBed);
-
+			wardBedRepo.save(patientService.clearPatientBed(assignpatient));
+			WardBedTab trasnsferredBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),
+					wardBean.getBedId().get(0));
+			trasnsferredBed.setAssignedPatientId(assignpatient);
+			trasnsferredBed.setAdmissionDate(wardBean.getAdmissionDate());
+			wardBedRepo.save(trasnsferredBed);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient bed has been changed");
-			response.put(HShopConstant.DATA, wardBedassign);
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
@@ -239,12 +239,14 @@ public class PatientController {
 	}
 
 	@PostMapping("/patientDischarge")
-	public Map<String, String> patientDischarge(@RequestBody PatientDischarge patientDischarge) {
+	public Map<String, String> patientDischarge(@RequestBody PatientDischarge patientDischarge,
+			@RequestParam Long patientNumber) {
 		Map<String, String> response = new HashMap<>();
 		try {
 			patientDischargeRepo.save(patientDischarge);
+			wardBedRepo.save(patientService.clearPatientBed(patientNumber));
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Bed has been created");
+			response.put(HShopConstant.MESSAGE, "Patient has been dishcarged");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
@@ -252,7 +254,13 @@ public class PatientController {
 			return response;
 		}
 	}
-	
+
+	@PostMapping("/getDischargeDetails")
+	public Object getDischargeDetails(@RequestBody Patient patient) {
+		WardBedTab patientDetails = wardBedRepo.findByAssignedPatientId(patient.getPatientId());
+		return patientDetails;
+	}
+
 	/**
 	 * Update
 	 */
@@ -282,7 +290,7 @@ public class PatientController {
 
 	@PostMapping("/getPatient")
 	public Patient getPatient(@RequestBody Patient patient) {
-		return patientRepo.findByPatientId(patient.getPatientId());
+		return patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
 	}
 
 	@GetMapping("/getDoctors")
@@ -326,6 +334,12 @@ public class PatientController {
 		return patientNumbers;
 	}
 
+	/**
+	 * This API is to get the wild card search list of the patient number.
+	 * 
+	 * @param patient
+	 * @return
+	 */
 	@GetMapping("/getPatientNumbers")
 	public List<String> getPatientNumbers() {
 		List<Patient> patients = patientRepo.findAll();
