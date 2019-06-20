@@ -20,6 +20,7 @@ import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
+import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
@@ -74,12 +75,31 @@ public class PatientController {
 	 */
 	@PostMapping("/createPatient")
 	public Map<String, String> createPatient(@RequestBody Patient patient) {
+		String pre="",suf="";
 		Map<String, String> response = new HashMap<>();
 		try {
-			// long PatientNumber=patientRepo.currentValue();
-			// PatientNumber++;
-			// List<PrefixSuffix> presuf=prefixSuffixRepo.findAll();
-			// TODO: Need to write a logic to save prefix and suffix
+			 long PatientNumber=patientRepo.currentValue();
+			 PatientNumber++;
+			 List<PrefixSuffix> presuf=prefixSuffixRepo.findAll();
+			 for (PrefixSuffix prexsufx : presuf )
+			 {
+				 if(prexsufx.getPrefixSuffix().equals("Prefix") && prexsufx.getPrefixSuffixValue()!=(null))
+				 {  
+					  pre=prexsufx.getPrefixSuffixValue();
+					 //patient.setPatientNumber(prexsufx.getPrefixSuffixValue() + PatientNumber); 
+				 }
+				 else if(prexsufx.getPrefixSuffix().equals("Suffix") && prexsufx.getPrefixSuffixValue()!=(null))
+				 {    
+				 
+					 suf=prexsufx.getPrefixSuffixValue();
+					 //patient.setPatientNumber(PatientNumber + prexsufx.getPrefixSuffixValue());
+				     
+				 }
+				
+			 }
+			    patient.setPatientNumber( pre + PatientNumber + suf );
+			 
+
 			patientRepo.save(patient);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been created");

@@ -7,8 +7,9 @@ import com.hsoft.app.model.PrefixSuffix;
 public interface PrefixSuffixRepository extends JpaRepository<PrefixSuffix, Long>  {
 	
 	PrefixSuffix findByPrefixSuffixId(long id);
-	PrefixSuffix findByPrefixSuffixAndPrefixSuffixValue(String prefixSuffix, String prefixSuffixValue);
+	PrefixSuffix findByPrefixSuffix(String prefixSuffix);
 	
 	//@Query(value ="select * from prefix_suffix", nativeQuery = true)
+	
 	 
 }
