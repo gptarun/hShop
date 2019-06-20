@@ -6,4 +6,5 @@ import com.hsoft.app.model.AppointmentBooking;
 
 public interface AppointmentRepository extends JpaRepository<AppointmentBooking, Long> {
 
+	AppointmentBooking findByAssignedPatientId(String assignedPatientId);
 }

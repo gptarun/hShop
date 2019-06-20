@@ -23,7 +23,7 @@ public class AppointmentBooking {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointmentSequence")
 	@SequenceGenerator(name = "appointmentSequence", sequenceName = "APP_SEQ", allocationSize = 1)
 	private long appointmentId;
-	private long assignedPatientId;
+	private String assignedPatientId;
 	private String consultant;
 	private String clinic;
 	private Date appointmentDate;
@@ -60,11 +60,11 @@ public class AppointmentBooking {
 		this.appointmentDate = appointmentDate;
 	}
 
-	public long getAssignedPatientId() {
+	public String getAssignedPatientId() {
 		return assignedPatientId;
 	}
 
-	public void setAssignedPatientId(long assignedPatientId) {
+	public void setAssignedPatientId(String assignedPatientId) {
 		this.assignedPatientId = assignedPatientId;
 	}
 

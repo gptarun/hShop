@@ -80,25 +80,22 @@ public class PatientController {
 	 */
 	@PostMapping("/createPatient")
 	public Map<String, String> createPatient(@RequestBody Patient patient) {
-		String pre = "", suf = "";
+		String pre = "";
+		String suf = "";
 		Map<String, String> response = new HashMap<>();
 		try {
-			long PatientNumber = patientRepo.currentValue();
-			PatientNumber++;
+			long patientId = patientRepo.currentValue();
+			patientId++;
 			List<PrefixSuffix> presuf = prefixSuffixRepo.findAll();
 			for (PrefixSuffix prexsufx : presuf) {
-				if (prexsufx.getPrefixSuffix().equals("Prefix") && prexsufx.getPrefixSuffixValue() != (null)) {
+				if (prexsufx.getPrefixSuffix().equals("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
 					pre = prexsufx.getPrefixSuffixValue();
-					// patient.setPatientNumber(prexsufx.getPrefixSuffixValue() + PatientNumber);
-				} else if (prexsufx.getPrefixSuffix().equals("Suffix") && prexsufx.getPrefixSuffixValue() != (null)) {
-
+				} else if (prexsufx.getPrefixSuffix().equals("Suffix") && prexsufx.getPrefixSuffixValue() != null) {
 					suf = prexsufx.getPrefixSuffixValue();
-					// patient.setPatientNumber(PatientNumber + prexsufx.getPrefixSuffixValue());
-
 				}
 
 			}
-			patient.setPatientNumber(pre + PatientNumber + suf);
+			patient.setPatientNumber(pre + patientId + suf);
 
 			patientRepo.save(patient);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
@@ -249,7 +246,7 @@ public class PatientController {
 		try {
 			schemeRepo.save(scheme);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Bed has been created");
+			response.put(HShopConstant.MESSAGE, "Scheme has been created");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
@@ -257,7 +254,7 @@ public class PatientController {
 			return response;
 		}
 	}
-	
+
 	@GetMapping("/getSchemes")
 	public List<Scheme> getScheme() {
 		return schemeRepo.findAll();
@@ -298,6 +295,11 @@ public class PatientController {
 			response.put(HShopConstant.MESSAGE, e.toString());
 			return response;
 		}
+	}
+
+	@PostMapping("/getPatientAppointment")
+	public AppointmentBooking getPatientAppointment(@RequestBody AppointmentBooking appointmentBooking) {
+		return appointmentRepository.findByAssignedPatientId(appointmentBooking.getAssignedPatientId());
 	}
 
 	/**
