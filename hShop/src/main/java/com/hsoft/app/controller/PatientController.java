@@ -257,6 +257,11 @@ public class PatientController {
 			return response;
 		}
 	}
+	
+	@GetMapping("/getSchemes")
+	public List<Scheme> getScheme() {
+		return schemeRepo.findAll();
+	}
 
 	@PostMapping("/patientDischarge")
 	public Map<String, String> patientDischarge(@RequestBody PatientDischarge patientDischarge,
