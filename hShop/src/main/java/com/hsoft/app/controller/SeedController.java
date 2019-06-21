@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.constant.HShopConstant;
-import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 
@@ -28,7 +27,7 @@ public class SeedController {
 	 * create
 	 */
 
-	@PostMapping("/createPrefixSuffix")
+	@PostMapping("/createUpdatePrefixSuffix")
 	public Map<String, String> createDoctor(@RequestBody PrefixSuffix prefixSuffix) {
 		Map<String, String> response = new HashMap<>();
 		try {
@@ -46,7 +45,7 @@ public class SeedController {
 		}
 	}
 
-	@PostMapping("/getPrefixSuffix")
+	@PostMapping("/findPrefixSuffix")
 	public PrefixSuffix getPrefixSuffix(@RequestBody PrefixSuffix prefixSuffix) {
 		return prefixSuffixRepo.findByPrefixSuffixId(prefixSuffix.getPrefixSuffixId());
 	}

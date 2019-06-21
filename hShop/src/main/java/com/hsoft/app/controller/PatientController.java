@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,10 +74,11 @@ public class PatientController {
 	@Autowired
 	AppointmentRepository appointmentRepository;
 
-	/**
-	 * create
+	/********************************************************************************************************************************
+	 ************************************************** ALL THE POST MAPPINGS********************************************************
+	 ********************************************************************************************************************************
 	 */
-	@PostMapping("/createPatient")
+	@PostMapping("/createUpdatePatient")
 	public Map<String, String> createPatient(@RequestBody Patient patient) {
 		String pre = "";
 		String suf = "";
@@ -88,9 +88,9 @@ public class PatientController {
 			patientId++;
 			List<PrefixSuffix> presuf = prefixSuffixRepo.findAll();
 			for (PrefixSuffix prexsufx : presuf) {
-				if (prexsufx.getPrefixSuffix().equals("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
+				if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
 					pre = prexsufx.getPrefixSuffixValue();
-				} else if (prexsufx.getPrefixSuffix().equals("Suffix") && prexsufx.getPrefixSuffixValue() != null) {
+				} else if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Suffix") && prexsufx.getPrefixSuffixValue() != null) {
 					suf = prexsufx.getPrefixSuffixValue();
 				}
 
@@ -166,7 +166,7 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping("/getVacantBeds")
+	@PostMapping("/findVacantBeds")
 	public List<Long> getVacantBeds(@RequestBody WardBean wardBean) {
 		List<Long> unoccupiedBeds = new ArrayList<>();
 		List<WardBedTab> wardBedTabs = new ArrayList<>();
@@ -183,7 +183,7 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping("/assignBed")
+	@PostMapping("/patientAdmission")
 	public Map<String, Object> assignBed(@RequestBody WardBean wardBean) {
 		Map<String, Object> response = new HashMap<>();
 		try {
@@ -213,6 +213,7 @@ public class PatientController {
 					wardBean.getBedId().get(0));
 			trasnsferredBed.setAssignedPatientId(assignpatient);
 			trasnsferredBed.setAdmissionDate(wardBean.getAdmissionDate());
+			trasnsferredBed.setDoctorName(wardBean.getDoctorName());
 			wardBedRepo.save(trasnsferredBed);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient bed has been changed");
@@ -225,7 +226,7 @@ public class PatientController {
 
 	}
 
-	@PostMapping("/createDoctor")
+	@PostMapping("/createUpdateDoctor")
 	public Map<String, String> createDoctor(@RequestBody Doctor doctor) {
 		Map<String, String> response = new HashMap<>();
 		try {
@@ -240,7 +241,7 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping("/createScheme")
+	@PostMapping("/createUpdateScheme")
 	public Map<String, String> createScheme(@RequestBody Scheme scheme) {
 		Map<String, String> response = new HashMap<>();
 		try {
@@ -253,11 +254,6 @@ public class PatientController {
 			response.put(HShopConstant.MESSAGE, e.toString());
 			return response;
 		}
-	}
-
-	@GetMapping("/getSchemes")
-	public List<Scheme> getScheme() {
-		return schemeRepo.findAll();
 	}
 
 	@PostMapping("/patientDischarge")
@@ -277,12 +273,12 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping("/getDischargeDetails")
+	@PostMapping("/findDischargeDetails")
 	public Object getDischargeDetails(@RequestBody Patient patient) {
 		return wardBedRepo.findByAssignedPatientId(patient.getPatientId());
 	}
 
-	@PostMapping("/createAppointment")
+	@PostMapping("/createUpdateAppointment")
 	public Map<String, String> createAppointment(@RequestBody AppointmentBooking appointmentBooking) {
 		Map<String, String> response = new HashMap<>();
 		try {
@@ -297,31 +293,45 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping("/getPatientAppointment")
+	@PostMapping("/findPatientAppointment")
 	public AppointmentBooking getPatientAppointment(@RequestBody AppointmentBooking appointmentBooking) {
 		return appointmentRepository.findByAssignedPatientId(appointmentBooking.getAssignedPatientId());
 	}
 
-	/**
-	 * Update
-	 */
-	@PutMapping("/updatePatient")
-	public Map<String, String> updateUser(@RequestBody Patient user) {
-		Map<String, String> response = new HashMap<>();
-		try {
-			// patiemtRepo.
-			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Patient has been created");
-			return response;
-		} catch (Exception e) {
-			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
-			response.put(HShopConstant.MESSAGE, e.toString());
-			return response;
-		}
+	@PostMapping("/findPatient")
+	public Patient getPatient(@RequestBody Patient patient) {
+		return patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
+	}
+
+	@PostMapping("/findDoctor")
+	public Doctor getDoctor(@RequestBody Doctor doctor) {
+		return doctorRepo.findByDoctorId(doctor.getDoctorId());
+	}
+
+	@PostMapping("/findBedPerWard")
+	public List<Bed> getBedPerWard(@RequestBody WardBedTab wardBedTab) {
+		return wardBedRepo.findByWardId(wardBedTab.getWardId());
 	}
 
 	/**
-	 * Get
+	 * This API is to get the wild card search list of the patient number.
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	@PostMapping("/findPatientNumber")
+	public List<String> getPatientNumber(@RequestBody Patient patient) {
+		List<String> patientNumbers = new ArrayList<>();
+		List<Patient> patientList = patientRepo.searchWithJPQLQuery(patient.getPatientNumber());
+		for (Patient patientObj : patientList) {
+			patientNumbers.add(patientObj.getPatientNumber());
+		}
+		return patientNumbers;
+	}
+
+	/********************************************************************************************************************************
+	 ************************************************** ALL THE GET MAPPINGS*********************************************************
+	 ********************************************************************************************************************************
 	 */
 
 	@GetMapping("/getPatients")
@@ -329,19 +339,9 @@ public class PatientController {
 		return patientRepo.findAll();
 	}
 
-	@PostMapping("/getPatient")
-	public Patient getPatient(@RequestBody Patient patient) {
-		return patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
-	}
-
 	@GetMapping("/getDoctors")
 	public List<Doctor> getDoctors() {
 		return doctorRepo.findAll();
-	}
-
-	@PostMapping("/getDoctor")
-	public Doctor getDoctor(@RequestBody Doctor doctor) {
-		return doctorRepo.findByDoctorId(doctor.getDoctorId());
 	}
 
 	@GetMapping("/getWards")
@@ -354,33 +354,6 @@ public class PatientController {
 		return bedRepo.findAll();
 	}
 
-	@PostMapping("/getBedPerWard")
-	public List<Bed> getBedPerWard(@RequestBody WardBedTab wardBedTab) {
-		return wardBedRepo.findByWardId(wardBedTab.getWardId());
-	}
-
-	/**
-	 * This API is to get the wild card search list of the patient number.
-	 * 
-	 * @param patient
-	 * @return
-	 */
-	@PostMapping("/getPatientNumber")
-	public List<String> getPatientNumber(@RequestBody Patient patient) {
-		List<String> patientNumbers = new ArrayList<>();
-		List<Patient> patientList = patientRepo.searchWithJPQLQuery(patient.getPatientNumber());
-		for (Patient patientObj : patientList) {
-			patientNumbers.add(patientObj.getPatientNumber());
-		}
-		return patientNumbers;
-	}
-
-	/**
-	 * This API is to get the wild card search list of the patient number.
-	 * 
-	 * @param patient
-	 * @return
-	 */
 	@GetMapping("/getPatientNumbers")
 	public List<String> getPatientNumbers() {
 		List<Patient> patients = patientRepo.findAll();
@@ -391,4 +364,8 @@ public class PatientController {
 		return patientNumbers;
 	}
 
+	@GetMapping("/getSchemes")
+	public List<Scheme> getScheme() {
+		return schemeRepo.findAll();
+	}
 }

@@ -24,7 +24,7 @@ public class AppointmentBooking {
 	@SequenceGenerator(name = "appointmentSequence", sequenceName = "APP_SEQ", allocationSize = 1)
 	private long appointmentId;
 	private String assignedPatientId;
-	private String consultant;
+	private long consultant;
 	private String clinic;
 	private Date appointmentDate;
 
@@ -36,11 +36,11 @@ public class AppointmentBooking {
 		this.appointmentId = appointmentId;
 	}
 
-	public String getConsultant() {
+	public long getConsultant() {
 		return consultant;
 	}
 
-	public void setConsultant(String consultant) {
+	public void setConsultant(long consultant) {
 		this.consultant = consultant;
 	}
 

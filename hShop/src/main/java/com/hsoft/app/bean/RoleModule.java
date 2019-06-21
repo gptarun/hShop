@@ -2,9 +2,6 @@ package com.hsoft.app.bean;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
-import com.hsoft.app.model.Module;
 import com.hsoft.app.model.Role;
 
 public class RoleModule {
