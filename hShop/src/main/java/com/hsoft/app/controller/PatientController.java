@@ -23,6 +23,7 @@ import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
+import com.hsoft.app.model.SchemeDetails;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.AppointmentRepository;
@@ -31,6 +32,7 @@ import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientDischargeRepository;
 import com.hsoft.app.repository.PatientRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
+import com.hsoft.app.repository.SchemeDetailsRepository;
 import com.hsoft.app.repository.SchemeRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
@@ -74,6 +76,9 @@ public class PatientController {
 
 	@Autowired
 	AppointmentRepository appointmentRepository;
+	
+	@Autowired
+	SchemeDetailsRepository schemeDetailsRepository;
 
 	/**
 	 * create
@@ -256,11 +261,15 @@ public class PatientController {
 	}
 
 	@GetMapping("/getSchemes")
-	public List<Scheme> getScheme() {
-		List<Scheme> schemes = schemeRepo.findAll();
-		return schemes;
+	public List<Scheme> getSchemes() {
+		return schemeRepo.findAll();
 	}
-
+	
+	@GetMapping("/getScheme")
+	public Scheme getScheme(@RequestBody Scheme scheme) {
+		return schemeRepo.findByInsuranceName(scheme.getInsuranceName());
+	}
+	
 	@PostMapping("/patientDischarge")
 	public Map<String, String> patientDischarge(@RequestBody PatientDischarge patientDischarge,
 			@RequestParam Long patientNumber) {
@@ -354,6 +363,11 @@ public class PatientController {
 	public List<Bed> getBeds() {
 		return bedRepo.findAll();
 	}
+	
+	@GetMapping("/getSchemDetails")
+	public List<SchemeDetails> getSchemDetails() {
+		return schemeDetailsRepository.findAll();
+	}
 
 	@PostMapping("/getBedPerWard")
 	public List<Bed> getBedPerWard(@RequestBody WardBedTab wardBedTab) {
@@ -391,5 +405,5 @@ public class PatientController {
 		}
 		return patientNumbers;
 	}
-
+	
 }

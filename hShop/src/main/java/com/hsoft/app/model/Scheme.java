@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Scheme {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schemeSequence")
+	@SequenceGenerator(name = "schemeSequence", sequenceName = "SCHEME_SEQ", allocationSize = 1)
 	@Column(name = "scheme_id", updatable = false, nullable = false)
 	private long schemeId;
 
