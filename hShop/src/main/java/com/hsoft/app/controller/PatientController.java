@@ -260,7 +260,8 @@ public class PatientController {
 	
 	@GetMapping("/getSchemes")
 	public List<Scheme> getScheme() {
-		return schemeRepo.findAll();
+		List<Scheme> schemes = schemeRepo.findAll();
+		return schemes;
 	}
 
 	@PostMapping("/patientDischarge")

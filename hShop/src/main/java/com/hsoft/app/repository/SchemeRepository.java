@@ -11,4 +11,5 @@ import com.hsoft.app.model.Scheme;
 public interface SchemeRepository extends JpaRepository<Scheme, Long> {
 	List<Scheme> findAll();
 	Scheme findById(long userId);
+	Scheme findByInsuranceName(String insuranceName);
 }

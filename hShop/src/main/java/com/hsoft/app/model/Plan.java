@@ -28,6 +28,30 @@ public class Plan {
 	private String planType;
 	
 	@Column(name = "discount_percentage")
-	private double discountPercentage;	
+	private double discountPercentage;
+
+	public long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(long planId) {
+		this.planId = planId;
+	}
+
+	public String getPlanType() {
+		return planType;
+	}
+
+	public void setPlanType(String planType) {
+		this.planType = planType;
+	}
+
+	public double getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(double discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}	
 	
 }
