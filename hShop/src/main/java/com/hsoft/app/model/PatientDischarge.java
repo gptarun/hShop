@@ -28,11 +28,12 @@ public class PatientDischarge {
 	private Date dischargeDate;
 	private String dischargeStatus;
 	private String finalDiagnosis;
-	private String consultant;
+	private long consultant;
 	@Column(name = "is_summary_written")
 	private boolean isSummaryWritten;
 	@Column(name = "other_comments", length = 500)
 	private String otherComments;
+	private String patientNumber;
 
 	public long getPatientDischargeId() {
 		return patientDischargeId;
@@ -66,11 +67,11 @@ public class PatientDischarge {
 		this.finalDiagnosis = finalDiagnosis;
 	}
 
-	public String getConsultant() {
+	public long getConsultant() {
 		return consultant;
 	}
 
-	public void setConsultant(String consultant) {
+	public void setConsultant(long consultant) {
 		this.consultant = consultant;
 	}
 
@@ -88,6 +89,14 @@ public class PatientDischarge {
 
 	public void setOtherComments(String otherComments) {
 		this.otherComments = otherComments;
+	}
+
+	public String getPatientNumber() {
+		return patientNumber;
+	}
+
+	public void setPatientNumber(String patientNumber) {
+		this.patientNumber = patientNumber;
 	}
 
 }
