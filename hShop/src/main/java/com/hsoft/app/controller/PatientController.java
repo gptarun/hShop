@@ -351,6 +351,21 @@ public class PatientController {
 		}
 	}
 
+	@PostMapping("/findPatientHistory")
+	public ResponseModel findPatientHistory(@RequestBody PatientHistory patientHistory) {
+		ResponseModel response = new ResponseModel();
+		try {
+			response.setStatus(HShopConstant.TRUE);
+			response.setData(patientHistoryRepo.findByPatientNumber(patientHistory.getPatientNumber()));
+			response.setMessage("Patient History has been found");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			return response;
+		}
+	}
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
 	 ********************************************************************************************************************************
