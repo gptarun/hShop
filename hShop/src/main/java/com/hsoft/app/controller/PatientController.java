@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.AppointmentBooking;
@@ -20,6 +21,7 @@ import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
+import com.hsoft.app.model.PatientHistory;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.Ward;
@@ -28,6 +30,7 @@ import com.hsoft.app.repository.AppointmentRepository;
 import com.hsoft.app.repository.BedRepository;
 import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientDischargeRepository;
+import com.hsoft.app.repository.PatientHistoryRepository;
 import com.hsoft.app.repository.PatientRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.SchemeRepository;
@@ -74,6 +77,9 @@ public class PatientController {
 	@Autowired
 	AppointmentRepository appointmentRepository;
 
+	@Autowired
+	PatientHistoryRepository patientHistoryRepo;
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
 	 ********************************************************************************************************************************
@@ -90,7 +96,8 @@ public class PatientController {
 			for (PrefixSuffix prexsufx : presuf) {
 				if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
 					pre = prexsufx.getPrefixSuffixValue();
-				} else if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Suffix") && prexsufx.getPrefixSuffixValue() != null) {
+				} else if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Suffix")
+						&& prexsufx.getPrefixSuffixValue() != null) {
 					suf = prexsufx.getPrefixSuffixValue();
 				}
 
@@ -329,6 +336,21 @@ public class PatientController {
 		return patientNumbers;
 	}
 
+	@PostMapping("/createUpdatePatientHistory")
+	public ResponseModel createUpdatePatientHistory(@RequestBody PatientHistory patientHistory) {
+		ResponseModel response = new ResponseModel();
+		try {
+			patientHistoryRepo.save(patientHistory);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Patient History has been created");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			return response;
+		}
+	}
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
 	 ********************************************************************************************************************************
@@ -367,5 +389,14 @@ public class PatientController {
 	@GetMapping("/getSchemes")
 	public List<Scheme> getScheme() {
 		return schemeRepo.findAll();
+	}
+
+	@GetMapping("/getPatientHistories")
+	public ResponseModel getPatientHistory() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient History found");
+		responseModel.setData(patientHistoryRepo.findAll());
+		return responseModel;
 	}
 }
