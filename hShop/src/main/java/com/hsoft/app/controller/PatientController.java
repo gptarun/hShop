@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.constant.HShopConstant;
+import com.hsoft.app.model.AppointmentBooking;
 import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
@@ -24,6 +25,7 @@ import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
+import com.hsoft.app.repository.AppointmentRepository;
 import com.hsoft.app.repository.BedRepository;
 import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientDischargeRepository;
@@ -70,35 +72,30 @@ public class PatientController {
 	@Autowired
 	PatientService patientService;
 
+	@Autowired
+	AppointmentRepository appointmentRepository;
+
 	/**
 	 * create
 	 */
 	@PostMapping("/createPatient")
 	public Map<String, String> createPatient(@RequestBody Patient patient) {
-		String pre="",suf="";
+		String pre = "";
+		String suf = "";
 		Map<String, String> response = new HashMap<>();
 		try {
-			 long PatientNumber=patientRepo.currentValue();
-			 PatientNumber++;
-			 List<PrefixSuffix> presuf=prefixSuffixRepo.findAll();
-			 for (PrefixSuffix prexsufx : presuf )
-			 {
-				 if(prexsufx.getPrefixSuffix().equals("Prefix") && prexsufx.getPrefixSuffixValue()!=(null))
-				 {  
-					  pre=prexsufx.getPrefixSuffixValue();
-					 //patient.setPatientNumber(prexsufx.getPrefixSuffixValue() + PatientNumber); 
-				 }
-				 else if(prexsufx.getPrefixSuffix().equals("Suffix") && prexsufx.getPrefixSuffixValue()!=(null))
-				 {    
-				 
-					 suf=prexsufx.getPrefixSuffixValue();
-					 //patient.setPatientNumber(PatientNumber + prexsufx.getPrefixSuffixValue());
-				     
-				 }
-				
-			 }
-			    patient.setPatientNumber( pre + PatientNumber + suf );
-			 
+			long patientId = patientRepo.currentValue();
+			patientId++;
+			List<PrefixSuffix> presuf = prefixSuffixRepo.findAll();
+			for (PrefixSuffix prexsufx : presuf) {
+				if (prexsufx.getPrefixSuffix().equals("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
+					pre = prexsufx.getPrefixSuffixValue();
+				} else if (prexsufx.getPrefixSuffix().equals("Suffix") && prexsufx.getPrefixSuffixValue() != null) {
+					suf = prexsufx.getPrefixSuffixValue();
+				}
+
+			}
+			patient.setPatientNumber(pre + patientId + suf);
 
 			patientRepo.save(patient);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
@@ -249,7 +246,7 @@ public class PatientController {
 		try {
 			schemeRepo.save(scheme);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Bed has been created");
+			response.put(HShopConstant.MESSAGE, "Scheme has been created");
 			return response;
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
@@ -257,7 +254,7 @@ public class PatientController {
 			return response;
 		}
 	}
-	
+
 	@GetMapping("/getSchemes")
 	public List<Scheme> getScheme() {
 		List<Scheme> schemes = schemeRepo.findAll();
@@ -283,8 +280,27 @@ public class PatientController {
 
 	@PostMapping("/getDischargeDetails")
 	public Object getDischargeDetails(@RequestBody Patient patient) {
-		WardBedTab patientDetails = wardBedRepo.findByAssignedPatientId(patient.getPatientId());
-		return patientDetails;
+		return wardBedRepo.findByAssignedPatientId(patient.getPatientId());
+	}
+
+	@PostMapping("/createAppointment")
+	public Map<String, String> createAppointment(@RequestBody AppointmentBooking appointmentBooking) {
+		Map<String, String> response = new HashMap<>();
+		try {
+			appointmentRepository.save(appointmentBooking);
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.MESSAGE, "Appointment has been created");
+			return response;
+		} catch (Exception e) {
+			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
+			response.put(HShopConstant.MESSAGE, e.toString());
+			return response;
+		}
+	}
+
+	@PostMapping("/getPatientAppointment")
+	public AppointmentBooking getPatientAppointment(@RequestBody AppointmentBooking appointmentBooking) {
+		return appointmentRepository.findByAssignedPatientId(appointmentBooking.getAssignedPatientId());
 	}
 
 	/**
