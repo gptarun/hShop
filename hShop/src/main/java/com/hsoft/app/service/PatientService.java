@@ -1,8 +1,11 @@
 package com.hsoft.app.service;
 
 import java.io.File;
-import java.nio.file.Files;
+import java.io.FileInputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +18,21 @@ public class PatientService {
 	@Autowired
 	WardBedTabRepository wardBedRepo;
 
-	public byte[] getPatientImage(String patientNumber, String filePath) {
-		try {
-			filePath = filePath + patientNumber + ".jpg";
-			System.out.println(filePath);
-			File file = new File(filePath);
-			return Files.readAllBytes(file.toPath());
+	public String getPatientImage(String patientNumber) throws URISyntaxException {
+		String encodedImage = "";
+		ClassLoader classLoader = getClass().getClassLoader();
+		URI imageURI = classLoader.getResource("static/images/" + patientNumber + ".jpg").toURI();
+		File imageFile = new File(imageURI);
+		File newImageFile = new File(imageFile.getAbsolutePath());
+		try (FileInputStream fileInputStreamReader = new FileInputStream(newImageFile);) {
+			byte[] bytes = new byte[(int) newImageFile.length()];
+			fileInputStreamReader.read(bytes);
+			encodedImage = new String(Base64.encodeBase64(bytes));
 		} catch (Exception e) {
-			return new byte[0];
+			e.printStackTrace();
 		}
+		return encodedImage;
+
 	}
 
 	public WardBedTab clearPatientBed(long assignedPatientId) {

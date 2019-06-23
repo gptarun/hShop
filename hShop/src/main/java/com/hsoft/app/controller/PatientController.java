@@ -1,11 +1,16 @@
 package com.hsoft.app.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +23,12 @@ import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.AppointmentBooking;
 import com.hsoft.app.model.Bed;
+import com.hsoft.app.model.CodingIndexing;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PatientHistory;
+import com.hsoft.app.model.PatientIdNumber;
 import com.hsoft.app.model.PatientSchemeDet;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
@@ -30,9 +37,11 @@ import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.AppointmentRepository;
 import com.hsoft.app.repository.BedRepository;
+import com.hsoft.app.repository.CodingIndexingRepository;
 import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientDischargeRepository;
 import com.hsoft.app.repository.PatientHistoryRepository;
+import com.hsoft.app.repository.PatientIdNumberRepository;
 import com.hsoft.app.repository.PatientRepository;
 import com.hsoft.app.repository.PatientSchemeDetRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
@@ -50,6 +59,9 @@ import com.hsoft.app.service.PatientService;
 @CrossOrigin(origins = "*")
 @RestController
 public class PatientController {
+
+	@Value("${file.upload-dir}")
+	private String imageLocation;
 
 	@Autowired
 	PatientRepository patientRepo;
@@ -80,7 +92,7 @@ public class PatientController {
 
 	@Autowired
 	AppointmentRepository appointmentRepository;
-	
+
 	@Autowired
 	SchemeDetailsRepository schemeDetailsRepository;
 
@@ -89,6 +101,12 @@ public class PatientController {
 	
 	@Autowired
 	private PatientSchemeDetRepository patientSchemeDetRepo;
+
+	@Autowired
+	PatientIdNumberRepository patientIdNumberRepository;
+
+	@Autowired
+	CodingIndexingRepository codingIndexingRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -100,6 +118,14 @@ public class PatientController {
 		String suf = "";
 		Map<String, String> response = new HashMap<>();
 		try {
+			if (patient.getEncodedImage() != null) {
+				File file = new File(imageLocation + patient.getPatientNumber() + ".jpg");
+				byte[] byteImage = Base64.decodeBase64(patient.getEncodedImage());
+				OutputStream os = new FileOutputStream(file);
+				os.write(byteImage);
+				os.close();
+				patient.setEncodedImage(null);
+			}
 			long patientId = patientRepo.currentValue();
 			patientId++;
 			List<PrefixSuffix> presuf = prefixSuffixRepo.findAll();
@@ -115,6 +141,8 @@ public class PatientController {
 			patient.setPatientNumber(pre + patientId + suf);
 
 			patientRepo.save(patient);
+			patientIdNumberRepository.save(new PatientIdNumber(patient.getPatientId(), patient.getPatientNumber()));
+
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been created");
 			return response;
@@ -272,7 +300,7 @@ public class PatientController {
 			return response;
 		}
 	}
-	
+
 	@PostMapping("/createUpdateSchemeDetails")
 	public ResponseModel createUpdateSchemeDetails(@RequestBody SchemeDetails schemeDetails) {
 		ResponseModel responseModel = new ResponseModel();
@@ -335,7 +363,15 @@ public class PatientController {
 
 	@PostMapping("/findPatient")
 	public Patient getPatient(@RequestBody Patient patient) {
-		return patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
+		Patient patientObj;
+		try {
+			String encodedImage = patientService.getPatientImage(patient.getPatientNumber());
+			patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
+			patientObj.setEncodedImage(encodedImage);
+		} catch (Exception e) {
+			patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
+		}
+		return patientObj;
 	}
 
 	@PostMapping("/findDoctor")
@@ -394,6 +430,36 @@ public class PatientController {
 		}
 	}
 
+	@PostMapping("/createCodeIndex")
+	public ResponseModel createCodeIndex(@RequestBody CodingIndexing codingIndexing) {
+		ResponseModel response = new ResponseModel();
+		try {
+			codingIndexingRepo.save(codingIndexing);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Coding and indexing created");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			return response;
+		}
+	}
+
+	@PostMapping("/findCodeIndex")
+	public ResponseModel findCodeIndex(@RequestBody CodingIndexing codingIndexing) {
+		ResponseModel response = new ResponseModel();
+		try {
+			response.setData(codingIndexingRepo.findByPatientNumber(codingIndexing.getPatientNumber()));
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Coding and indexing found");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage("No Coding and indexing found for the Patient");
+			return response;
+		}
+	}
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
 	 ********************************************************************************************************************************
@@ -419,6 +485,11 @@ public class PatientController {
 		return bedRepo.findAll();
 	}
 
+	@GetMapping("/getSchemDetails")
+	public List<SchemeDetails> getSchemDetails() {
+		return schemeDetailsRepository.findAll();
+	}
+
 	@GetMapping("/getPatientNumbers")
 	public List<String> getPatientNumbers() {
 		List<Patient> patients = patientRepo.findAll();
@@ -433,7 +504,7 @@ public class PatientController {
 	public List<Scheme> getScheme() {
 		return schemeRepo.findAll();
 	}
-	
+
 	@GetMapping("/getScheme")
 	public Scheme getScheme(@RequestBody Scheme scheme) {
 		return schemeRepo.findByInsuranceName(scheme.getInsuranceName());
@@ -466,4 +537,14 @@ public class PatientController {
 		return responseModel;
 	}
 	
+
+	@GetMapping("/getPatientIdNumber")
+	public ResponseModel getPatientIdNumber() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient Id Number mapping found");
+		responseModel.setData(patientIdNumberRepository.findAll());
+		return responseModel;
+	}
+
 }
