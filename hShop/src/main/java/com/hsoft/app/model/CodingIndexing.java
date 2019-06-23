@@ -25,6 +25,7 @@ public class CodingIndexing {
 	@SequenceGenerator(name = "codeIndexSequence", sequenceName = "CI_SEQ", allocationSize = 1)
 	private long codeIndexId;
 
+	private String patientNumber;
 	private Date startDate;
 	private Date endDate;
 	@Column(name = "provisional_diagnosis", length = 1000)
@@ -39,6 +40,14 @@ public class CodingIndexing {
 	private String operationCode2;
 	private String resultPxCode;
 	private boolean isPostMortem;
+
+	public String getPatientNumber() {
+		return patientNumber;
+	}
+
+	public void setPatientNumber(String patientNumber) {
+		this.patientNumber = patientNumber;
+	}
 
 	public long getCodeIndexId() {
 		return codeIndexId;

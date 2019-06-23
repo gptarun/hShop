@@ -23,6 +23,7 @@ import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.AppointmentBooking;
 import com.hsoft.app.model.Bed;
+import com.hsoft.app.model.CodingIndexing;
 import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
@@ -35,6 +36,7 @@ import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.AppointmentRepository;
 import com.hsoft.app.repository.BedRepository;
+import com.hsoft.app.repository.CodingIndexingRepository;
 import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientDischargeRepository;
 import com.hsoft.app.repository.PatientHistoryRepository;
@@ -97,6 +99,9 @@ public class PatientController {
 
 	@Autowired
 	PatientIdNumberRepository patientIdNumberRepository;
+
+	@Autowired
+	CodingIndexingRepository codingIndexingRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -414,6 +419,36 @@ public class PatientController {
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage(e.toString());
+			return response;
+		}
+	}
+
+	@PostMapping("/createCodeIndex")
+	public ResponseModel createCodeIndex(@RequestBody CodingIndexing codingIndexing) {
+		ResponseModel response = new ResponseModel();
+		try {
+			codingIndexingRepo.save(codingIndexing);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Coding and indexing created");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			return response;
+		}
+	}
+
+	@PostMapping("/findCodeIndex")
+	public ResponseModel findCodeIndex(@RequestBody CodingIndexing codingIndexing) {
+		ResponseModel response = new ResponseModel();
+		try {
+			response.setData(codingIndexingRepo.findByPatientNumber(codingIndexing.getPatientNumber()));
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Coding and indexing found");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage("No Coding and indexing found for the Patient");
 			return response;
 		}
 	}

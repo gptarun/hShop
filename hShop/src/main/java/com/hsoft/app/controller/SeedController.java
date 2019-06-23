@@ -94,8 +94,8 @@ public class SeedController {
 	public ResponseModel findICDCode(@RequestBody ICDCodes iCDCodes) {
 		ResponseModel response = new ResponseModel();
 		try {
-			response.setData((List) iCDCodesRepo.findByDiseaseCodeOrDiseaseName(iCDCodes.getDiseaseCode(),
-					iCDCodes.getDiseaseName()));
+			response.setData(
+					iCDCodesRepo.findByDiseaseCodeOrDiseaseName(iCDCodes.getDiseaseCode(), iCDCodes.getDiseaseName()));
 			response.setStatus(HShopConstant.TRUE);
 			response.setMessage("ICD Code found");
 			return response;
