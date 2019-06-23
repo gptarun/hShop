@@ -79,7 +79,7 @@ public class Patient {
 	private String highestEducation;
 	private String occupation;
 	private String accommodationType;
-	@Column(name = "encoded_image", length = 10000000)
+	@Column(name = "encoded_image", length = 10000)
 	private String encodedImage;
 
 	@ManyToOne
