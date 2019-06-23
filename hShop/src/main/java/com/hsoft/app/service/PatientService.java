@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ public class PatientService {
 	public String getPatientImage(String patientNumber) throws URISyntaxException {
 		String encodedImage = "";
 		ClassLoader classLoader = getClass().getClassLoader();
-		URL add = classLoader.getResource("static/images/" + patientNumber + ".jpg");
-		System.out.println(add.getPath());
 		URI imageURI = classLoader.getResource("static/images/" + patientNumber + ".jpg").toURI();
 		File imageFile = new File(imageURI);
 		File newImageFile = new File(imageFile.getAbsolutePath());

@@ -2,9 +2,7 @@ package com.hsoft.app.controller;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -351,13 +349,16 @@ public class PatientController {
 	}
 
 	@PostMapping("/findPatient")
-	public Patient getPatient(@RequestBody Patient patient) throws IOException, URISyntaxException {
-
-		String encodedImage = patientService.getPatientImage(patient.getPatientNumber());
-		byte[] imageStr = Base64.encodeBase64(encodedImage.getBytes());
-		Patient patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(),
-				patient.getPatientNumber());
-		patientObj.setEncodedImage(new String(Base64.encodeBase64(imageStr), "UTF-8"));
+	public Patient getPatient(@RequestBody Patient patient) {
+		Patient patientObj;
+		try {
+			String encodedImage = patientService.getPatientImage(patient.getPatientNumber());
+			byte[] imageStr = Base64.encodeBase64(encodedImage.getBytes());
+			patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
+			patientObj.setEncodedImage(new String(Base64.encodeBase64(imageStr)));
+		} catch (Exception e) {
+			patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
+		}
 		return patientObj;
 	}
 
