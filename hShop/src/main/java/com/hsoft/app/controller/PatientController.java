@@ -22,6 +22,7 @@ import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PatientHistory;
+import com.hsoft.app.model.PatientSchemeDet;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.SchemeDetails;
@@ -33,6 +34,7 @@ import com.hsoft.app.repository.DoctorRepository;
 import com.hsoft.app.repository.PatientDischargeRepository;
 import com.hsoft.app.repository.PatientHistoryRepository;
 import com.hsoft.app.repository.PatientRepository;
+import com.hsoft.app.repository.PatientSchemeDetRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.SchemeDetailsRepository;
 import com.hsoft.app.repository.SchemeRepository;
@@ -84,6 +86,9 @@ public class PatientController {
 
 	@Autowired
 	PatientHistoryRepository patientHistoryRepo;
+	
+	@Autowired
+	private PatientSchemeDetRepository patientSchemeDetRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -269,18 +274,21 @@ public class PatientController {
 	}
 	
 	@PostMapping("/createUpdateSchemeDetails")
-	public Map<String, String> createUpdateSchemeDetails(@RequestBody SchemeDetails schemeDetails) {
-		Map<String, String> response = new HashMap<>();
-		try {
-			schemeDetailsRepository.save(schemeDetails);
-			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
-			response.put(HShopConstant.MESSAGE, "Scheme has been created");
-			return response;
-		} catch (Exception e) {
-			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
-			response.put(HShopConstant.MESSAGE, e.toString());
-			return response;
-		}
+	public ResponseModel createUpdateSchemeDetails(@RequestBody SchemeDetails schemeDetails) {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient Scheme Details are created/updated successfully");
+		schemeDetailsRepository.save(schemeDetails);
+		return responseModel;
+	}
+	
+	@PostMapping("/createUpdatePatSchemeDet")
+	public ResponseModel createUpdatePatSchemeDet(@RequestBody PatientSchemeDet patientSchemeDet) {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient Scheme Details are created/updated successfully");
+		patientSchemeDetRepo.save(patientSchemeDet);
+		return responseModel;
 	}
 
 	@PostMapping("/patientDischarge")
@@ -410,11 +418,6 @@ public class PatientController {
 	public List<Bed> getBeds() {
 		return bedRepo.findAll();
 	}
-	
-	@GetMapping("/getSchemDetails")
-	public List<SchemeDetails> getSchemDetails() {
-		return schemeDetailsRepository.findAll();
-	}
 
 	@GetMapping("/getPatientNumbers")
 	public List<String> getPatientNumbers() {
@@ -444,4 +447,23 @@ public class PatientController {
 		responseModel.setData(patientHistoryRepo.findAll());
 		return responseModel;
 	}
+	
+	@GetMapping("/getPatientSchemeDet")
+	public ResponseModel getPatientSchemeDet() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient Scheme Details found");
+		responseModel.setData(patientSchemeDetRepo.findAll());
+		return responseModel;
+	}
+	
+	@GetMapping("/getSchemeDetails")
+	public ResponseModel getSchemeDetails() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient Scheme Details found");
+		responseModel.setData(schemeDetailsRepository.findAll());
+		return responseModel;
+	}
+	
 }
