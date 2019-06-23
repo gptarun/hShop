@@ -358,9 +358,8 @@ public class PatientController {
 		Patient patientObj;
 		try {
 			String encodedImage = patientService.getPatientImage(patient.getPatientNumber());
-			byte[] imageStr = Base64.encodeBase64(encodedImage.getBytes());
 			patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
-			patientObj.setEncodedImage(new String(Base64.encodeBase64(imageStr)));
+			patientObj.setEncodedImage(encodedImage);
 		} catch (Exception e) {
 			patientObj = patientRepo.findByPatientIdOrPatientNumber(patient.getPatientId(), patient.getPatientNumber());
 		}
