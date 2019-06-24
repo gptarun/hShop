@@ -11,7 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.WardBedTabRepository;
-
+/**
+ * 
+ * @author Accordify Solutions
+ *
+ */
 @Service
 public class PatientService {
 
