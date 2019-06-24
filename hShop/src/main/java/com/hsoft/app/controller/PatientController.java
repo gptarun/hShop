@@ -53,7 +53,7 @@ import com.hsoft.app.service.PatientService;
 
 /**
  * 
- * @author Tarun
+ * @author Accordify Solutions
  *
  */
 @CrossOrigin(origins = "*")
@@ -411,6 +411,7 @@ public class PatientController {
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage(e.toString());
+			response.setData(null);
 			return response;
 		}
 	}
@@ -426,6 +427,7 @@ public class PatientController {
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage(e.toString());
+			response.setData(null);
 			return response;
 		}
 	}
@@ -441,6 +443,7 @@ public class PatientController {
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage(e.toString());
+			response.setData(null);
 			return response;
 		}
 	}
@@ -456,6 +459,7 @@ public class PatientController {
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage("No Coding and indexing found for the Patient");
+			response.setData(null);
 			return response;
 		}
 	}
