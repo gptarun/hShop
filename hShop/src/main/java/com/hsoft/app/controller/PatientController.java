@@ -316,6 +316,8 @@ public class PatientController {
 		responseModel.setStatus(HShopConstant.TRUE);
 		responseModel.setMessage("Patient Scheme Details are created/updated successfully");
 		patientSchemeDetRepo.save(patientSchemeDet);
+		patientRepo.save((patientSchemeDet.getPatient()));
+		schemeDetailsRepository.save(patientSchemeDet.getSchemeDetails());
 		return responseModel;
 	}
 
