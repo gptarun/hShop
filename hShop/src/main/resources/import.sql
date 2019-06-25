@@ -1,5 +1,5 @@
 INSERT INTO public.department(dep_id, department) VALUES (1,'Medical');
-INSERT INTO public.role(role_id, role) VALUES (1, 'Admin');
+INSERT INTO public.role(role_id, role) VALUES (1000, 'Admin');
 
 INSERT INTO public.parent_module(parent_module_id, module_name) VALUES (1, 'EMR');
 INSERT INTO public.parent_module(parent_module_id, module_name) VALUES (2, 'Settings');
