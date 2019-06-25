@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,9 +27,10 @@ public class PatientSchemeDet {
 	@SequenceGenerator(name = "patientSchemeDetSequence", sequenceName = "PATIENT_SCHEME_DET_SEQ", allocationSize = 1)
 	@Column(name = "patient_scheme_det_id", updatable = false, nullable = false)
 	private long patientSchemeDetId;
-
-	@Column(name = "patient_id")
-	private long patientId;
+	
+	@ManyToOne
+	@JoinColumn(name = "patient_id")
+	private Patient patient;
 	
 	@ManyToOne
 	@JoinColumn(name = "scheme_details_id")
@@ -42,12 +44,12 @@ public class PatientSchemeDet {
 		this.patientSchemeDetId = patientSchemeDetId;
 	}
 
-	public long getPatientId() {
-		return patientId;
+	public Patient getPatient() {
+		return patient;
 	}
 
-	public void setPatientId(long patientId) {
-		this.patientId = patientId;
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 	public SchemeDetails getSchemeDetails() {

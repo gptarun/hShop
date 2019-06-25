@@ -1,7 +1,7 @@
 package com.hsoft.app.model;
 /**
  * 
- * @author Tarun
+ * @author Accordify Solutions
  * This class will be use as user DTO
  */
 public class UserModel {
