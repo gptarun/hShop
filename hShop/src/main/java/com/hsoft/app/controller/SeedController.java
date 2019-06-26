@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.ICDCodes;
+import com.hsoft.app.model.Laboratory;
 import com.hsoft.app.model.PrefixSuffix;
+import com.hsoft.app.model.Radiology;
 import com.hsoft.app.repository.ICDCodesRepository;
+import com.hsoft.app.repository.LaboratoryRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
+import com.hsoft.app.repository.RadiologyRepository;
 /**
  * 
  * @author Accordify Solutions
@@ -32,6 +36,12 @@ public class SeedController {
 
 	@Autowired
 	ICDCodesRepository iCDCodesRepo;
+	
+	@Autowired
+	RadiologyRepository radiologyRepo;
+
+	@Autowired
+	LaboratoryRepository laboratoryRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -109,6 +119,51 @@ public class SeedController {
 			return response;
 		}
 	}
+	
+	@PostMapping("/createUpdateRadiology")
+	public ResponseModel createUpdateRadiology(@RequestBody Radiology radiology) {
+		ResponseModel response = new ResponseModel();
+		try {
+			radiologyRepo.save(radiology);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Radiology has been added");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	
+	@PostMapping("/findRadiology")
+	public Radiology getRadiology(@RequestBody Radiology radiology) {
+		return radiologyRepo.findByServiceIdOrServiceName(radiology.getServiceId(), radiology.getServiceName());
+			}
+	
+	@PostMapping("/createUpdateLaboratory")
+	public ResponseModel createUpdateLaboratory(@RequestBody Laboratory laboratory) {
+		ResponseModel response = new ResponseModel();
+		try {
+			laboratoryRepo.save(laboratory);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Laboratory has been added");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	
+	@PostMapping("/findLaboratory")
+	public Laboratory getLaboratory(@RequestBody Laboratory laboratory) {
+		return laboratoryRepo.findByServiceCodeOrLabService(laboratory.getServiceCode(),laboratory.getLabService());
+			}
+	
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
@@ -128,4 +183,24 @@ public class SeedController {
 		return responseModel;
 	}
 
-}
+
+
+   @GetMapping("/getAllRadiologies")
+    public ResponseModel getAllRadiologies() {
+	ResponseModel responseModel = new ResponseModel();
+	responseModel.setStatus(HShopConstant.TRUE);
+	responseModel.setMessage("All radiologies found");
+	responseModel.setData(radiologyRepo.findAll());
+	return responseModel;
+    }
+   @GetMapping("/getAllLaboratories")
+    public ResponseModel getAllLaboratories() {
+	ResponseModel responseModel = new ResponseModel();
+	responseModel.setStatus(HShopConstant.TRUE);
+	responseModel.setMessage("All Laboratories found");
+	responseModel.setData(laboratoryRepo.findAll());
+	return responseModel;
+    }
+
+
+    }

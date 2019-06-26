@@ -30,7 +30,7 @@ public class PharmacyController {
 	 ********************************************************************************************************************************
 	 */
 	@PostMapping("/createUpdateDrug")
-	public ResponseModel createCodeIndex(@RequestBody Drug drug) {
+	public ResponseModel createUpdateDrug(@RequestBody Drug drug) {
 		ResponseModel response = new ResponseModel();
 		try {
 			drugRepo.save(drug);

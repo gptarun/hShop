@@ -6,6 +6,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,11 +22,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Role {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roleSequence")
+	@SequenceGenerator(name = "roleSequence", sequenceName = "ROLE_SEQ", allocationSize = 1)
 	@Column(name = "ROLE_ID", unique = true, nullable = false)
 	private long roleId;
 
-	@Column(name = "role")
+	@Column(name = "role_name")
 	private String roleName;
 
 	public long getRoleId() {
