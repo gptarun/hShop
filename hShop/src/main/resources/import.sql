@@ -29,4 +29,4 @@ INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (13, 
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (14, 'Batch Uploads', '2');
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (15, 'Location Setting', '2');
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (16, 'Password Reset', '2');
-INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (17, 'Drug Register', '11');
+INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (17, 'Drug Register', '6');
