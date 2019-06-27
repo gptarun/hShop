@@ -34,7 +34,7 @@ public class WardBedTab {
 	private long bedId;
 
 	@Column(name = "assigned_patient_id")
-	private long assignedPatientId;
+	private String assignedPatientId;
 	
 	@Column(name = "doctor_name")
 	private String doctorName;
@@ -90,11 +90,11 @@ public class WardBedTab {
 		this.bedId = bedId;
 	}
 
-	public long getAssignedPatientId() {
+	public String getAssignedPatientId() {
 		return assignedPatientId;
 	}
 
-	public void setAssignedPatientId(long assignedPatientId) {
+	public void setAssignedPatientId(String assignedPatientId) {
 		this.assignedPatientId = assignedPatientId;
 	}
 

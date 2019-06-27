@@ -23,11 +23,14 @@ public class PatientHistory {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "patientHistorySequence")
 	@SequenceGenerator(name = "patientHistorySequence", sequenceName = "HISTORY_SEQ", allocationSize = 1)
 	private long patientHistoryId;
-	private long patientId;
+	private String firstName;
+	private String lastName;
+	
+
 	private String patientNumber;
 	private Date admissionDate;
-	private int lastBedId;
-	private int lastWardId;
+	private long   lastBedId;
+	private long   lastWardId;
 	private boolean isActive;
 	private String consultingDoctor;
 	private String dischargeDoctor;
@@ -39,6 +42,23 @@ public class PatientHistory {
 	private double totalBillAmount;
 	private double netPay;
 	private String dischargeStatus;
+	
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
 	public long getPatientHistoryId() {
 		return patientHistoryId;
@@ -48,14 +68,7 @@ public class PatientHistory {
 		this.patientHistoryId = patientHistoryId;
 	}
 
-	public long getPatientId() {
-		return patientId;
-	}
-
-	public void setPatientId(long patientId) {
-		this.patientId = patientId;
-	}
-
+	
 	public String getPatientNumber() {
 		return patientNumber;
 	}
@@ -72,19 +85,19 @@ public class PatientHistory {
 		this.admissionDate = admissionDate;
 	}
 
-	public int getLastBedId() {
+	public long getLastBedId() {
 		return lastBedId;
 	}
 
-	public void setLastBedId(int lastBedId) {
+	public void setLastBedId(long lastBedId) {
 		this.lastBedId = lastBedId;
 	}
 
-	public int getLastWardId() {
+	public long getLastWardId() {
 		return lastWardId;
 	}
 
-	public void setLastWardId(int lastWardId) {
+	public void setLastWardId(long lastWardId) {
 		this.lastWardId = lastWardId;
 	}
 

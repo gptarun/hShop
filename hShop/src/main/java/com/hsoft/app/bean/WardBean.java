@@ -8,7 +8,7 @@ public class WardBean {
 	private long wardBedId;
 	private long wardId;
 	private List<Long> bedId;
-	private long assignedPatientId;
+	private String assignedPatientId;
 	private String doctorName;
 	private Date admissionDate;
 
@@ -52,11 +52,11 @@ public class WardBean {
 		this.bedId = bedId;
 	}
 
-	public long getAssignedPatientId() {
+	public String getAssignedPatientId() {
 		return assignedPatientId;
 	}
 
-	public void setAssignedPatientId(long assignedPatientId) {
+	public void setAssignedPatientId(String assignedPatientId) {
 		this.assignedPatientId = assignedPatientId;
 	}
 

@@ -11,6 +11,8 @@ import com.hsoft.app.model.Patient;
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
 	Patient findByPatientId(long id);
+	
+	Patient findByPatientNumber(String id);
 
 	Patient findByPatientIdOrPatientNumber(long patientId, String patientNumnber);
 

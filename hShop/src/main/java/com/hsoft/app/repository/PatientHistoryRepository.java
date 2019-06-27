@@ -11,4 +11,5 @@ public interface PatientHistoryRepository extends JpaRepository<PatientHistory, 
 	List<PatientHistory> findByPatientNumberAndIsActive(String patientNumber, boolean isActive);
 
 	List<PatientHistory> findByPatientNumber(String patientNumber);
+	
 }

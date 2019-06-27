@@ -28,7 +28,7 @@ public class PatientDischarge {
 	private Date dischargeDate;
 	private String dischargeStatus;
 	private String finalDiagnosis;
-	private long consultant;
+	private String consultant;
 	@Column(name = "is_summary_written")
 	private boolean isSummaryWritten;
 	@Column(name = "other_comments", length = 500)
@@ -67,11 +67,11 @@ public class PatientDischarge {
 		this.finalDiagnosis = finalDiagnosis;
 	}
 
-	public long getConsultant() {
+	public String getConsultant() {
 		return consultant;
 	}
 
-	public void setConsultant(long consultant) {
+	public void setConsultant(String consultant) {
 		this.consultant = consultant;
 	}
 

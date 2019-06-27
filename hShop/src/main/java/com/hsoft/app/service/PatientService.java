@@ -4,12 +4,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hsoft.app.model.Patient;
+import com.hsoft.app.model.PatientDischarge;
+import com.hsoft.app.model.PatientHistory;
 import com.hsoft.app.model.WardBedTab;
+import com.hsoft.app.repository.PatientHistoryRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 /**
  * 
@@ -19,8 +24,13 @@ import com.hsoft.app.repository.WardBedTabRepository;
 @Service
 public class PatientService {
 
+	private static final boolean True = false;
+
 	@Autowired
 	WardBedTabRepository wardBedRepo;
+	
+	@Autowired
+	PatientHistoryRepository patientHistoryRepo;
 
 	public String getPatientImage(String patientNumber) throws URISyntaxException {
 		String encodedImage = "";
@@ -39,11 +49,53 @@ public class PatientService {
 
 	}
 
-	public WardBedTab clearPatientBed(long assignedPatientId) {
+	public WardBedTab clearPatientBed(String assignedPatientId) {
 		WardBedTab wardBedassign = wardBedRepo.findByAssignedPatientId(assignedPatientId);
-		wardBedassign.setAssignedPatientId(0L);
+		wardBedassign.setAssignedPatientId(null);
 		wardBedassign.setAdmissionDate(null);
 		wardBedassign.setDoctorName(null);
 		return wardBedassign;
 	}
+	
+	public void PatientRegistrationHistory(Patient patient)
+	{    PatientHistory patienthistory=new PatientHistory();
+	     patienthistory.setPatientNumber(patient.getPatientNumber());
+	     patienthistory.setFirstName(patient.getFirstName());
+	     patienthistory.setLastName(patient.getLastName());
+	     patientHistoryRepo.save(patienthistory);
+	     
+     }
+	
+	public void PatientAdmissionHistory(WardBedTab wardbedtab)
+	{   //TODO To make the isActive status true at the time of patient admission
+	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardbedtab.getAssignedPatientId());
+	    
+	    for(PatientHistory patienthist:patienthistory)
+	    	if(patienthist.isActive()==True)
+	    	{
+	    		patienthist.setAdmissionDate(wardbedtab.getAdmissionDate());
+				patienthist.setLastWardId(wardbedtab.getWardId());
+				patienthist.setLastBedId(wardbedtab.getBedId());
+				patienthist.setConsultingDoctor(wardbedtab.getDoctorName());
+				patientHistoryRepo.save(patienthist);
+	    	}
+	    	  
+	 }
+	public void PatientDischargeHistory(PatientDischarge patientdischarge)
+	{   
+	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(patientdischarge.getPatientNumber());
+	    for(PatientHistory patienthist:patienthistory)
+	    	if(patienthist.isActive()==True)
+	    	{
+	    		patienthist.setDischargeDoctor(patientdischarge.getConsultant());
+				patienthist.setDischargeDate(patientdischarge.getDischargeDate());
+				patienthist.setDischargeStatus(patientdischarge.getDischargeStatus());
+				patientHistoryRepo.save(patienthist);
+	    	}
+	    	  
+	 }
+	
+	
+	
+	
 }

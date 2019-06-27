@@ -107,6 +107,8 @@ public class PatientController {
 
 	@Autowired
 	CodingIndexingRepository codingIndexingRepo;
+	
+	//PatientHistory patienthistory=new PatientHistory();
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -116,6 +118,7 @@ public class PatientController {
 	public Map<String, String> createPatient(@RequestBody Patient patient) {
 		String pre = "";
 		String suf = "";
+		
 		Map<String, String> response = new HashMap<>();
 		try {
 			long patientId = patientRepo.currentValue();
@@ -142,8 +145,8 @@ public class PatientController {
 			
 			patientRepo.save(patient);
 			patientIdNumberRepository.save(new PatientIdNumber(patient.getPatientId(), patient.getPatientNumber()));
-
-			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			patientService.PatientRegistrationHistory(patient);
+            response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been created");
 			return response;
 		} catch (Exception e) {
@@ -216,7 +219,7 @@ public class PatientController {
 		List<Long> unoccupiedBeds = new ArrayList<>();
 		List<WardBedTab> wardBedTabs = new ArrayList<>();
 		try {
-			wardBedTabs = wardBedRepo.findByWardIdAndAssignedPatientId(wardBean.getWardId(), 0L);
+			wardBedTabs = wardBedRepo.findByWardIdAndAssignedPatientId(wardBean.getWardId(), null);
 
 			for (WardBedTab wardBedTab : wardBedTabs) {
 				unoccupiedBeds.add(wardBedTab.getBedId());
@@ -237,6 +240,7 @@ public class PatientController {
 			wardBed.setDoctorName(wardBean.getDoctorName());
 			wardBed.setAdmissionDate(wardBean.getAdmissionDate());
 			wardBedRepo.save(wardBed);
+			patientService.PatientAdmissionHistory(wardBed);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been assigned");
 			response.put(HShopConstant.DATA, wardBed);
@@ -252,7 +256,7 @@ public class PatientController {
 	public Map<String, Object> wardTransfer(@RequestBody WardBean wardBean) {
 		Map<String, Object> response = new HashMap<>();
 		try {
-			long assignpatient = wardBean.getAssignedPatientId();
+			String assignpatient = wardBean.getAssignedPatientId();
 			wardBedRepo.save(patientService.clearPatientBed(assignpatient));
 			WardBedTab trasnsferredBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),
 					wardBean.getBedId().get(0));
@@ -322,12 +326,11 @@ public class PatientController {
 	}
 
 	@PostMapping("/patientDischarge")
-	public Map<String, String> patientDischarge(@RequestBody PatientDischarge patientDischarge,
-			@RequestParam Long patientNumber) {
+	public Map<String, String> patientDischarge(@RequestBody PatientDischarge patientDischarge) {
 		Map<String, String> response = new HashMap<>();
 		try {
 			patientDischargeRepo.save(patientDischarge);
-			wardBedRepo.save(patientService.clearPatientBed(patientNumber));
+			wardBedRepo.save(patientService.clearPatientBed(patientDischarge.getPatientNumber()));
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been dishcarged");
 			return response;
@@ -340,7 +343,7 @@ public class PatientController {
 
 	@PostMapping("/findDischargeDetails")
 	public Object getDischargeDetails(@RequestBody Patient patient) {
-		return wardBedRepo.findByAssignedPatientId(patient.getPatientId());
+		return wardBedRepo.findByAssignedPatientId(patient.getPatientNumber());
 	}
 
 	@PostMapping("/createUpdateAppointment")
@@ -406,9 +409,9 @@ public class PatientController {
 	public ResponseModel createUpdatePatientHistory(@RequestBody PatientHistory patientHistory) {
 		ResponseModel response = new ResponseModel();
 		try {
-			patientHistoryRepo.save(patientHistory);
-			response.setStatus(HShopConstant.TRUE);
-			response.setMessage("Patient History has been created");
+			 patientHistoryRepo.save(patientHistory);
+			 response.setStatus(HShopConstant.TRUE);
+			 response.setMessage("Patient History has been created");
 			return response;
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
