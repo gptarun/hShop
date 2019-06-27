@@ -98,7 +98,7 @@ public class PatientController {
 
 	@Autowired
 	PatientHistoryRepository patientHistoryRepo;
-	
+
 	@Autowired
 	private PatientSchemeDetRepository patientSchemeDetRepo;
 
@@ -118,16 +118,7 @@ public class PatientController {
 		String suf = "";
 		Map<String, String> response = new HashMap<>();
 		try {
-			if (patient.getEncodedImage() != null) {
-				File file = new File(imageLocation + patient.getPatientNumber() + ".jpg");
-				byte[] byteImage = Base64.decodeBase64(patient.getEncodedImage());
-				OutputStream os = new FileOutputStream(file);
-				os.write(byteImage);
-				os.close();
-				patient.setEncodedImage(null);
-			}
 			long patientId = patientRepo.currentValue();
-			patientId++;
 			List<PrefixSuffix> presuf = prefixSuffixRepo.findAll();
 			for (PrefixSuffix prexsufx : presuf) {
 				if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
@@ -140,6 +131,15 @@ public class PatientController {
 			}
 			patient.setPatientNumber(pre + patientId + suf);
 
+			if (patient.getEncodedImage() != null) {
+				File file = new File(imageLocation + patient.getPatientNumber() + ".jpg");
+				byte[] byteImage = Base64.decodeBase64(patient.getEncodedImage());
+				OutputStream os = new FileOutputStream(file);
+				os.write(byteImage);
+				os.close();
+				patient.setEncodedImage(null);
+			}
+			
 			patientRepo.save(patient);
 			patientIdNumberRepository.save(new PatientIdNumber(patient.getPatientId(), patient.getPatientNumber()));
 
@@ -309,7 +309,7 @@ public class PatientController {
 		schemeDetailsRepository.save(schemeDetails);
 		return responseModel;
 	}
-	
+
 	@PostMapping("/createUpdatePatSchemeDet")
 	public ResponseModel createUpdatePatSchemeDet(@RequestBody PatientSchemeDet patientSchemeDet) {
 		ResponseModel responseModel = new ResponseModel();
@@ -524,7 +524,7 @@ public class PatientController {
 		responseModel.setData(patientHistoryRepo.findAll());
 		return responseModel;
 	}
-	
+
 	@GetMapping("/getPatientSchemeDet")
 	public ResponseModel getPatientSchemeDet() {
 		ResponseModel responseModel = new ResponseModel();
@@ -533,7 +533,7 @@ public class PatientController {
 		responseModel.setData(patientSchemeDetRepo.findAll());
 		return responseModel;
 	}
-	
+
 	@GetMapping("/getSchemeDetails")
 	public ResponseModel getSchemeDetails() {
 		ResponseModel responseModel = new ResponseModel();
@@ -542,7 +542,6 @@ public class PatientController {
 		responseModel.setData(schemeDetailsRepository.findAll());
 		return responseModel;
 	}
-	
 
 	@GetMapping("/getPatientIdNumber")
 	public ResponseModel getPatientIdNumber() {

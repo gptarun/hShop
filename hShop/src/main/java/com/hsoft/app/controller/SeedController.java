@@ -21,6 +21,7 @@ import com.hsoft.app.repository.ICDCodesRepository;
 import com.hsoft.app.repository.LaboratoryRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.RadiologyRepository;
+
 /**
  * 
  * @author Accordify Solutions
@@ -36,7 +37,7 @@ public class SeedController {
 
 	@Autowired
 	ICDCodesRepository iCDCodesRepo;
-	
+
 	@Autowired
 	RadiologyRepository radiologyRepo;
 
@@ -52,8 +53,12 @@ public class SeedController {
 		Map<String, String> response = new HashMap<>();
 		try {
 			PrefixSuffix prefixSuffixs = prefixSuffixRepo.findByPrefixSuffix(prefixSuffix.getPrefixSuffix());
-			prefixSuffixs.setPrefixSuffixValue(prefixSuffix.getPrefixSuffixValue());
-			prefixSuffixRepo.save(prefixSuffixs);
+			if (prefixSuffixs != null) {
+				prefixSuffixs.setPrefixSuffixValue(prefixSuffix.getPrefixSuffixValue());
+				prefixSuffixRepo.save(prefixSuffixs);
+			} else {
+				prefixSuffixRepo.save(prefixSuffix);
+			}
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "PrefixSuffix has been created");
 			return response;
@@ -119,7 +124,7 @@ public class SeedController {
 			return response;
 		}
 	}
-	
+
 	@PostMapping("/createUpdateRadiology")
 	public ResponseModel createUpdateRadiology(@RequestBody Radiology radiology) {
 		ResponseModel response = new ResponseModel();
@@ -135,13 +140,12 @@ public class SeedController {
 			return response;
 		}
 	}
-	
-	
+
 	@PostMapping("/findRadiology")
 	public Radiology getRadiology(@RequestBody Radiology radiology) {
 		return radiologyRepo.findByServiceIdOrServiceName(radiology.getServiceId(), radiology.getServiceName());
-			}
-	
+	}
+
 	@PostMapping("/createUpdateLaboratory")
 	public ResponseModel createUpdateLaboratory(@RequestBody Laboratory laboratory) {
 		ResponseModel response = new ResponseModel();
@@ -157,13 +161,11 @@ public class SeedController {
 			return response;
 		}
 	}
-	
-	
+
 	@PostMapping("/findLaboratory")
 	public Laboratory getLaboratory(@RequestBody Laboratory laboratory) {
-		return laboratoryRepo.findByServiceCodeOrLabService(laboratory.getServiceCode(),laboratory.getLabService());
-			}
-	
+		return laboratoryRepo.findByServiceCodeOrLabService(laboratory.getServiceCode(), laboratory.getLabService());
+	}
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
@@ -183,24 +185,22 @@ public class SeedController {
 		return responseModel;
 	}
 
+	@GetMapping("/getAllRadiologies")
+	public ResponseModel getAllRadiologies() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All radiologies found");
+		responseModel.setData(radiologyRepo.findAll());
+		return responseModel;
+	}
 
+	@GetMapping("/getAllLaboratories")
+	public ResponseModel getAllLaboratories() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All Laboratories found");
+		responseModel.setData(laboratoryRepo.findAll());
+		return responseModel;
+	}
 
-   @GetMapping("/getAllRadiologies")
-    public ResponseModel getAllRadiologies() {
-	ResponseModel responseModel = new ResponseModel();
-	responseModel.setStatus(HShopConstant.TRUE);
-	responseModel.setMessage("All radiologies found");
-	responseModel.setData(radiologyRepo.findAll());
-	return responseModel;
-    }
-   @GetMapping("/getAllLaboratories")
-    public ResponseModel getAllLaboratories() {
-	ResponseModel responseModel = new ResponseModel();
-	responseModel.setStatus(HShopConstant.TRUE);
-	responseModel.setMessage("All Laboratories found");
-	responseModel.setData(laboratoryRepo.findAll());
-	return responseModel;
-    }
-
-
-    }
+}
