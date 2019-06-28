@@ -69,9 +69,10 @@ public class PatientService {
 	public void PatientAdmissionHistory(WardBedTab wardbedtab)
 	{   //TODO To make the isActive status true at the time of patient admission
 	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardbedtab.getAssignedPatientId());
-	    
+	    PatientHistory pht=patienthistory.get(patienthistory.size()-1);
+	    pht.setActive(true);
 	    for(PatientHistory patienthist:patienthistory)
-	    	if(patienthist.isActive()==True)
+	    	if(patienthist.isActive())
 	    	{
 	    		patienthist.setAdmissionDate(wardbedtab.getAdmissionDate());
 				patienthist.setLastWardId(wardbedtab.getWardId());
@@ -85,11 +86,12 @@ public class PatientService {
 	{   
 	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(patientdischarge.getPatientNumber());
 	    for(PatientHistory patienthist:patienthistory)
-	    	if(patienthist.isActive()==True)
+	    	     if(patienthist.isActive())
 	    	{
 	    		patienthist.setDischargeDoctor(patientdischarge.getConsultant());
 				patienthist.setDischargeDate(patientdischarge.getDischargeDate());
 				patienthist.setDischargeStatus(patientdischarge.getDischargeStatus());
+				patienthist.setActive(false);
 				patientHistoryRepo.save(patienthist);
 	    	}
 	    	  

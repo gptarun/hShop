@@ -330,6 +330,7 @@ public class PatientController {
 		Map<String, String> response = new HashMap<>();
 		try {
 			patientDischargeRepo.save(patientDischarge);
+			patientService.PatientDischargeHistory(patientDischarge);
 			wardBedRepo.save(patientService.clearPatientBed(patientDischarge.getPatientNumber()));
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been dishcarged");
