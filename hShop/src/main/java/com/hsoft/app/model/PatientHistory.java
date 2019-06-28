@@ -31,6 +31,9 @@ public class PatientHistory {
 	private Date admissionDate;
 	private long   lastBedId;
 	private long   lastWardId;
+	private String wardName;
+	
+
 	private boolean isActive;
 	private String consultingDoctor;
 	private String dischargeDoctor;
@@ -42,6 +45,14 @@ public class PatientHistory {
 	private double totalBillAmount;
 	private double netPay;
 	private String dischargeStatus;
+	
+	public String getWardName() {
+		return wardName;
+	}
+
+	public void setWardName(String wardName) {
+		this.wardName = wardName;
+	}
 	
 	
 	public String getFirstName() {

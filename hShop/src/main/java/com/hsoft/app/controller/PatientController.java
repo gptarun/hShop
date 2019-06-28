@@ -240,7 +240,7 @@ public class PatientController {
 			wardBed.setDoctorName(wardBean.getDoctorName());
 			wardBed.setAdmissionDate(wardBean.getAdmissionDate());
 			wardBedRepo.save(wardBed);
-			patientService.PatientAdmissionHistory(wardBed);
+			patientService.patientAdmissionHistory(wardBean);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been assigned");
 			response.put(HShopConstant.DATA, wardBed);
@@ -264,6 +264,7 @@ public class PatientController {
 			trasnsferredBed.setAdmissionDate(wardBean.getAdmissionDate());
 			trasnsferredBed.setDoctorName(wardBean.getDoctorName());
 			wardBedRepo.save(trasnsferredBed);
+			patientService.PatientWardTransferHistory(wardBean);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient bed has been changed");
 			return response;
@@ -330,7 +331,7 @@ public class PatientController {
 		Map<String, String> response = new HashMap<>();
 		try {
 			patientDischargeRepo.save(patientDischarge);
-			patientService.PatientDischargeHistory(patientDischarge);
+			patientService.patientDischargeHistory(patientDischarge);
 			wardBedRepo.save(patientService.clearPatientBed(patientDischarge.getPatientNumber()));
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been dishcarged");

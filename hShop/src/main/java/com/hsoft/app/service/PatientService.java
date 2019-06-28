@@ -10,12 +10,15 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PatientHistory;
+import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.PatientHistoryRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
+import com.hsoft.app.repository.WardRepository;
 /**
  * 
  * @author Accordify Solutions
@@ -31,6 +34,9 @@ public class PatientService {
 	
 	@Autowired
 	PatientHistoryRepository patientHistoryRepo;
+	
+	@Autowired
+	WardRepository wardRepo;
 
 	public String getPatientImage(String patientNumber) throws URISyntaxException {
 		String encodedImage = "";
@@ -66,36 +72,62 @@ public class PatientService {
 	     
      }
 	
-	public void PatientAdmissionHistory(WardBedTab wardbedtab)
+	public void patientAdmissionHistory(WardBean wardBean)
 	{   //TODO To make the isActive status true at the time of patient admission
-	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardbedtab.getAssignedPatientId());
+	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
 	    PatientHistory pht=patienthistory.get(patienthistory.size()-1);
 	    pht.setActive(true);
 	    for(PatientHistory patienthist:patienthistory)
 	    	if(patienthist.isActive())
 	    	{
-	    		patienthist.setAdmissionDate(wardbedtab.getAdmissionDate());
-				patienthist.setLastWardId(wardbedtab.getWardId());
-				patienthist.setLastBedId(wardbedtab.getBedId());
-				patienthist.setConsultingDoctor(wardbedtab.getDoctorName());
+	    		patienthist.setAdmissionDate(wardBean.getAdmissionDate());
+				patienthist.setLastWardId(wardBean.getWardId());
+				Ward ward=wardRepo.findBywardId(wardBean.getWardId());
+				patienthist.setWardName(ward.getWardName());
+				patienthist.setLastBedId(wardBean.getBedId().get(0));
+				patienthist.setConsultingDoctor(wardBean.getDoctorName());
 				patientHistoryRepo.save(patienthist);
 	    	}
 	    	  
 	 }
-	public void PatientDischargeHistory(PatientDischarge patientdischarge)
+	public void patientDischargeHistory(PatientDischarge patientDischarge)
 	{   
-	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(patientdischarge.getPatientNumber());
+	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(patientDischarge.getPatientNumber());
 	    for(PatientHistory patienthist:patienthistory)
 	    	     if(patienthist.isActive())
 	    	{
-	    		patienthist.setDischargeDoctor(patientdischarge.getConsultant());
-				patienthist.setDischargeDate(patientdischarge.getDischargeDate());
-				patienthist.setDischargeStatus(patientdischarge.getDischargeStatus());
+	    		patienthist.setDischargeDoctor(patientDischarge.getConsultant());
+				patienthist.setDischargeDate(patientDischarge.getDischargeDate());
+				patienthist.setDischargeStatus(patientDischarge.getDischargeStatus());
 				patienthist.setActive(false);
 				patientHistoryRepo.save(patienthist);
 	    	}
 	    	  
 	 }
+	
+	
+	public void PatientWardTransferHistory(WardBean wardBean)
+	{   
+	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
+	    for(PatientHistory patienthist:patienthistory)
+	    	     if(patienthist.isActive())
+	    	{
+	    	        patienthist.setAdmissionDate(wardBean.getAdmissionDate());
+	 				patienthist.setLastWardId(wardBean.getWardId());
+	 				Ward ward=wardRepo.findBywardId(wardBean.getWardId());
+	 				patienthist.setWardName(ward.getWardName());
+	 				patienthist.setLastBedId(wardBean.getBedId().get(0));
+	 				patienthist.setConsultingDoctor(wardBean.getDoctorName());
+	 				patientHistoryRepo.save(patienthist);
+	    	}
+	    	  
+	 }
+	
+	
+	
+	
+	
+	
 	
 	
 	

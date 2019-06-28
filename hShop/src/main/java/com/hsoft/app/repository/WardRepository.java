@@ -7,5 +7,7 @@ import com.hsoft.app.model.Ward;
 
 @Repository
 public interface WardRepository extends JpaRepository<Ward, Long> {
+	
+	Ward findBywardId(long id);
 
 }
