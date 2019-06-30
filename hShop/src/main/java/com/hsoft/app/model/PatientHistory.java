@@ -25,14 +25,12 @@ public class PatientHistory {
 	private long patientHistoryId;
 	private String firstName;
 	private String lastName;
-	
 
 	private String patientNumber;
 	private Date admissionDate;
-	private long   lastBedId;
-	private long   lastWardId;
+	private long lastBedId;
+	private long lastWardId;
 	private String wardName;
-	
 
 	private boolean isActive;
 	private String consultingDoctor;
@@ -45,7 +43,7 @@ public class PatientHistory {
 	private double totalBillAmount;
 	private double netPay;
 	private String dischargeStatus;
-	
+
 	public String getWardName() {
 		return wardName;
 	}
@@ -53,8 +51,7 @@ public class PatientHistory {
 	public void setWardName(String wardName) {
 		this.wardName = wardName;
 	}
-	
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -79,7 +76,6 @@ public class PatientHistory {
 		this.patientHistoryId = patientHistoryId;
 	}
 
-	
 	public String getPatientNumber() {
 		return patientNumber;
 	}

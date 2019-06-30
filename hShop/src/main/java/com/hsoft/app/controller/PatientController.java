@@ -107,8 +107,8 @@ public class PatientController {
 
 	@Autowired
 	CodingIndexingRepository codingIndexingRepo;
-	
-	//PatientHistory patienthistory=new PatientHistory();
+
+	// PatientHistory patienthistory=new PatientHistory();
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -118,10 +118,10 @@ public class PatientController {
 	public Map<String, String> createPatient(@RequestBody Patient patient) {
 		String pre = "";
 		String suf = "";
-		
+
 		Map<String, String> response = new HashMap<>();
 		try {
-			long patientId = patientRepo.currentValue();
+
 			List<PrefixSuffix> presuf = prefixSuffixRepo.findAll();
 			for (PrefixSuffix prexsufx : presuf) {
 				if (prexsufx.getPrefixSuffix().equalsIgnoreCase("Prefix") && prexsufx.getPrefixSuffixValue() != null) {
@@ -132,7 +132,6 @@ public class PatientController {
 				}
 
 			}
-			patient.setPatientNumber(pre + patientId + suf);
 
 			if (patient.getEncodedImage() != null) {
 				File file = new File(imageLocation + patient.getPatientNumber() + ".jpg");
@@ -142,11 +141,15 @@ public class PatientController {
 				os.close();
 				patient.setEncodedImage(null);
 			}
-			
+
+			patientRepo.save(patient);
+			long patientId = patientRepo.currentValue();
+			patient.setPatientNumber(pre + patientId + suf);
+			// This is the update call to insert Patient number
 			patientRepo.save(patient);
 			patientIdNumberRepository.save(new PatientIdNumber(patient.getPatientId(), patient.getPatientNumber()));
 			patientService.PatientRegistrationHistory(patient);
-            response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been created");
 			return response;
 		} catch (Exception e) {
@@ -411,9 +414,9 @@ public class PatientController {
 	public ResponseModel createUpdatePatientHistory(@RequestBody PatientHistory patientHistory) {
 		ResponseModel response = new ResponseModel();
 		try {
-			 patientHistoryRepo.save(patientHistory);
-			 response.setStatus(HShopConstant.TRUE);
-			 response.setMessage("Patient History has been created");
+			patientHistoryRepo.save(patientHistory);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Patient History has been created");
 			return response;
 		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
