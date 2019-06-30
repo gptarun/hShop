@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.bean.ResponseModel;
@@ -133,18 +132,18 @@ public class PatientController {
 
 			}
 
-			if (patient.getEncodedImage() != null) {
-				File file = new File(imageLocation + patient.getPatientNumber() + ".jpg");
-				byte[] byteImage = Base64.decodeBase64(patient.getEncodedImage());
-				OutputStream os = new FileOutputStream(file);
-				os.write(byteImage);
-				os.close();
-				patient.setEncodedImage(null);
-			}
-
+			String encodedImage = patient.getEncodedImage().substring(23, patient.getEncodedImage().length());
+			patient.setEncodedImage(null);
 			patientRepo.save(patient);
 			long patientId = patientRepo.currentValue();
 			patient.setPatientNumber(pre + patientId + suf);
+			if (encodedImage != null && !encodedImage.isEmpty()) {
+				File file = new File(imageLocation + patient.getPatientNumber() + ".jpg");
+				byte[] byteImage = Base64.decodeBase64(encodedImage);
+				OutputStream os = new FileOutputStream(file);
+				os.write(byteImage);
+				os.close();
+			}
 			// This is the update call to insert Patient number
 			patientRepo.save(patient);
 			patientIdNumberRepository.save(new PatientIdNumber(patient.getPatientId(), patient.getPatientNumber()));

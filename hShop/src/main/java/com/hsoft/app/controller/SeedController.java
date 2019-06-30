@@ -15,10 +15,12 @@ import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.ICDCodes;
 import com.hsoft.app.model.Laboratory;
+import com.hsoft.app.model.OperationCode;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Radiology;
 import com.hsoft.app.repository.ICDCodesRepository;
 import com.hsoft.app.repository.LaboratoryRepository;
+import com.hsoft.app.repository.OperationCodeRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.RadiologyRepository;
 
@@ -43,6 +45,9 @@ public class SeedController {
 
 	@Autowired
 	LaboratoryRepository laboratoryRepo;
+
+	@Autowired
+	OperationCodeRepository operationCodeRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -167,6 +172,22 @@ public class SeedController {
 		return laboratoryRepo.findByServiceCodeOrLabService(laboratory.getServiceCode(), laboratory.getLabService());
 	}
 
+	@PostMapping("/createOpCode")
+	public ResponseModel createOpCode(@RequestBody OperationCode operationCode) {
+		ResponseModel response = new ResponseModel();
+		try {
+			operationCodeRepo.save(operationCode);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Operation code has been added");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
 	 ********************************************************************************************************************************
@@ -200,6 +221,15 @@ public class SeedController {
 		responseModel.setStatus(HShopConstant.TRUE);
 		responseModel.setMessage("All Laboratories found");
 		responseModel.setData(laboratoryRepo.findAll());
+		return responseModel;
+	}
+
+	@GetMapping("/getAllOpCode")
+	public ResponseModel getAllOpCode() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All Laboratories found");
+		responseModel.setData(operationCodeRepo.findAll());
 		return responseModel;
 	}
 

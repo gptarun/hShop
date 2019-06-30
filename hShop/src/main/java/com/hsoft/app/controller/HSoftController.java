@@ -127,6 +127,12 @@ public class HSoftController {
 		Map<String, String> response = new HashMap<>();
 		try {
 			long roleId = roleModule.getRole().getRoleId();
+			// checking if role-module mapping exists
+			if (roleModuleRepo.findByRoleId(roleId).size() > 0) {
+				int records = roleModuleRepo.deleteRoleModuleMapping(roleId);
+				System.out.println(records + " records are deleted");
+			}
+
 			for (long moduleId : roleModule.getModuleIds()) {
 				roleModuleRepo.save(new RoleModuleTab(roleId, moduleId));
 			}
