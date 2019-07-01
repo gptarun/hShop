@@ -179,6 +179,7 @@ public class PatientController {
 		Map<String, String> response = new HashMap<>();
 		try {
 			for (Bed bed : beds) {
+				bed.setVaccant(true);
 				bedRepo.save(bed);
 			}
 
@@ -243,6 +244,7 @@ public class PatientController {
 			wardBed.setDoctorName(wardBean.getDoctorName());
 			wardBed.setAdmissionDate(wardBean.getAdmissionDate());
 			wardBedRepo.save(wardBed);
+			bedRepo.save(new Bed(wardBean.getBedId().get(0), false));
 			patientService.patientAdmissionHistory(wardBean);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Patient has been assigned");
@@ -558,6 +560,23 @@ public class PatientController {
 		responseModel.setMessage("Patient Id Number mapping found");
 		responseModel.setData(patientIdNumberRepository.findAll());
 		return responseModel;
+	}
+
+	@GetMapping("/getVacantBeds")
+	public List<Long> getVacantBeds() {
+		List<Long> unoccupiedBeds = new ArrayList<>();
+		List<Bed> beds = new ArrayList<>();
+		try {
+			beds = bedRepo.findByIsVaccant(true);
+
+			for (Bed bed : beds) {
+				unoccupiedBeds.add(bed.getBedId());
+			}
+			return unoccupiedBeds;
+		} catch (Exception e) {
+			unoccupiedBeds.add(0L);
+			return unoccupiedBeds;
+		}
 	}
 
 }

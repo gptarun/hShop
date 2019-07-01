@@ -19,6 +19,7 @@ import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.PatientHistoryRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
+
 /**
  * 
  * @author Accordify Solutions
@@ -27,14 +28,12 @@ import com.hsoft.app.repository.WardRepository;
 @Service
 public class PatientService {
 
-	private static final boolean True = false;
-
 	@Autowired
 	WardBedTabRepository wardBedRepo;
-	
+
 	@Autowired
 	PatientHistoryRepository patientHistoryRepo;
-	
+
 	@Autowired
 	WardRepository wardRepo;
 
@@ -62,74 +61,61 @@ public class PatientService {
 		wardBedassign.setDoctorName(null);
 		return wardBedassign;
 	}
-	
-	public void PatientRegistrationHistory(Patient patient)
-	{    PatientHistory patienthistory=new PatientHistory();
-	     patienthistory.setPatientNumber(patient.getPatientNumber());
-	     patienthistory.setFirstName(patient.getFirstName());
-	     patienthistory.setLastName(patient.getLastName());
-	     patientHistoryRepo.save(patienthistory);
-	     
-     }
-	
-	public void patientAdmissionHistory(WardBean wardBean)
-	{   //TODO To make the isActive status true at the time of patient admission
-	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
-	    PatientHistory pht=patienthistory.get(patienthistory.size()-1);
-	    pht.setActive(true);
-	    for(PatientHistory patienthist:patienthistory)
-	    	if(patienthist.isActive())
-	    	{
-	    		patienthist.setAdmissionDate(wardBean.getAdmissionDate());
+
+	public void PatientRegistrationHistory(Patient patient) {
+		PatientHistory patienthistory = new PatientHistory();
+		patienthistory.setPatientNumber(patient.getPatientNumber());
+		patienthistory.setFirstName(patient.getFirstName());
+		patienthistory.setLastName(patient.getLastName());
+		patientHistoryRepo.save(patienthistory);
+
+	}
+
+	public void patientAdmissionHistory(WardBean wardBean) { // TODO To make the isActive status true at the time of
+																// patient admission
+		List<PatientHistory> patienthistory = patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
+		PatientHistory pht = patienthistory.get(patienthistory.size() - 1);
+		pht.setActive(true);
+		for (PatientHistory patienthist : patienthistory)
+			if (patienthist.isActive()) {
+				patienthist.setAdmissionDate(wardBean.getAdmissionDate());
 				patienthist.setLastWardId(wardBean.getWardId());
-				Ward ward=wardRepo.findBywardId(wardBean.getWardId());
+				Ward ward = wardRepo.findBywardId(wardBean.getWardId());
 				patienthist.setWardName(ward.getWardName());
 				patienthist.setLastBedId(wardBean.getBedId().get(0));
 				patienthist.setConsultingDoctor(wardBean.getDoctorName());
 				patientHistoryRepo.save(patienthist);
-	    	}
-	    	  
-	 }
-	public void patientDischargeHistory(PatientDischarge patientDischarge)
-	{   
-	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(patientDischarge.getPatientNumber());
-	    for(PatientHistory patienthist:patienthistory)
-	    	     if(patienthist.isActive())
-	    	{
-	    		patienthist.setDischargeDoctor(patientDischarge.getConsultant());
+			}
+
+	}
+
+	public void patientDischargeHistory(PatientDischarge patientDischarge) {
+		List<PatientHistory> patienthistory = patientHistoryRepo
+				.findByPatientNumber(patientDischarge.getPatientNumber());
+		for (PatientHistory patienthist : patienthistory)
+			if (patienthist.isActive()) {
+				patienthist.setDischargeDoctor(patientDischarge.getConsultant());
 				patienthist.setDischargeDate(patientDischarge.getDischargeDate());
 				patienthist.setDischargeStatus(patientDischarge.getDischargeStatus());
 				patienthist.setActive(false);
 				patientHistoryRepo.save(patienthist);
-	    	}
-	    	  
-	 }
-	
-	
-	public void PatientWardTransferHistory(WardBean wardBean)
-	{   
-	    List<PatientHistory> patienthistory=patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
-	    for(PatientHistory patienthist:patienthistory)
-	    	     if(patienthist.isActive())
-	    	{
-	    	        patienthist.setAdmissionDate(wardBean.getAdmissionDate());
-	 				patienthist.setLastWardId(wardBean.getWardId());
-	 				Ward ward=wardRepo.findBywardId(wardBean.getWardId());
-	 				patienthist.setWardName(ward.getWardName());
-	 				patienthist.setLastBedId(wardBean.getBedId().get(0));
-	 				patienthist.setConsultingDoctor(wardBean.getDoctorName());
-	 				patientHistoryRepo.save(patienthist);
-	    	}
-	    	  
-	 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+			}
+
+	}
+
+	public void PatientWardTransferHistory(WardBean wardBean) {
+		List<PatientHistory> patienthistory = patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
+		for (PatientHistory patienthist : patienthistory)
+			if (patienthist.isActive()) {
+				patienthist.setAdmissionDate(wardBean.getAdmissionDate());
+				patienthist.setLastWardId(wardBean.getWardId());
+				Ward ward = wardRepo.findBywardId(wardBean.getWardId());
+				patienthist.setWardName(ward.getWardName());
+				patienthist.setLastBedId(wardBean.getBedId().get(0));
+				patienthist.setConsultingDoctor(wardBean.getDoctorName());
+				patientHistoryRepo.save(patienthist);
+			}
+
+	}
+
 }

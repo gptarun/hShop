@@ -18,6 +18,17 @@ public class Bed {
 	@Id
 	@Column(name = "bed_id", updatable = false, nullable = false)
 	private long bedId;
+	private boolean isVaccant;
+
+	public Bed() {
+		super();
+	}
+
+	public Bed(long bedId, boolean isVaccant) {
+		super();
+		this.bedId = bedId;
+		this.isVaccant = isVaccant;
+	}
 
 	public long getBedId() {
 		return bedId;
@@ -26,4 +37,13 @@ public class Bed {
 	public void setBedId(long bedId) {
 		this.bedId = bedId;
 	}
+
+	public boolean isVaccant() {
+		return isVaccant;
+	}
+
+	public void setVaccant(boolean isVaccant) {
+		this.isVaccant = isVaccant;
+	}
+
 }
