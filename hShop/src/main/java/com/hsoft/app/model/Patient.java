@@ -70,7 +70,9 @@ public class Patient {
 	private String hospitalAddress;
 	private String authorizeDoctorName;
 	private String transferReason;
-
+    
+	private boolean isAttended;
+	
 	private boolean telephone;
 	private boolean internet;
 	private boolean electricity;
@@ -444,6 +446,14 @@ public class Patient {
 
 	public void setEncodedImage(String encodedImage) {
 		this.encodedImage = encodedImage;
+	}
+	
+	public boolean isAttended() {
+		return isAttended;
+	}
+
+	public void setAttended(boolean isAttended) {
+		this.isAttended = isAttended;
 	}
 
 }

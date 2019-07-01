@@ -141,7 +141,7 @@ public class PatientController {
 				os.close();
 				patient.setEncodedImage(null);
 			}
-
+            patient.setAttended(false);
 			patientRepo.save(patient);
 			long patientId = patientRepo.currentValue();
 			patient.setPatientNumber(pre + patientId + suf);
