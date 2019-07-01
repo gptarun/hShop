@@ -144,6 +144,7 @@ public class PatientController {
 				os.write(byteImage);
 				os.close();
 			}
+			patient.setAttended(false);
 			// This is the update call to insert Patient number
 			patientRepo.save(patient);
 			patientIdNumberRepository.save(new PatientIdNumber(patient.getPatientId(), patient.getPatientNumber()));
