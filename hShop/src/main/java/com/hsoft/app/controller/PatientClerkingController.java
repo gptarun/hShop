@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.ClerkingDesk;
+import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Patient;
+import com.hsoft.app.model.Vitals;
 import com.hsoft.app.repository.ClerkingDeskRepository;
 import com.hsoft.app.repository.CodingIndexingRepository;
 import com.hsoft.app.repository.PatientRepository;
+import com.hsoft.app.repository.VitalsRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 
 /**
@@ -38,6 +41,9 @@ public class PatientClerkingController {
 	
 	@Autowired
 	ClerkingDeskRepository clerkingDeskRepo;
+	
+	@Autowired
+	VitalsRepository vitalsRepo;
 	
 	
 	
@@ -63,20 +69,25 @@ public class PatientClerkingController {
 		}
 		}
 	
-	@GetMapping("/patientStatus")
-	public List<Patient> patientStatus() {
-		return patientRepo.findAll();
-        }
-	
-	
-	@GetMapping("/getPatientStatus")
-	public ResponseModel getPatientStatus() {
-		ResponseModel responseModel = new ResponseModel();
-		responseModel.setStatus(HShopConstant.TRUE);
-		responseModel.setMessage("Patient Status Details found");
-		responseModel.setData(patientRepo.findAll());
-		return responseModel;
+	@PostMapping("/createUpdateVitals")
+	public ResponseModel createUpdateVitals(@RequestBody Vitals vitals) {
+		ResponseModel response = new ResponseModel();
+		try {
+			vitalsRepo.save(vitals);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("vitals has been saved");
+			return response;
+		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+		}
+    
+	@PostMapping("/findVitals")
+	public Vitals getVitals(@RequestBody Vitals vital) {
+		return vitalsRepo.findByPatientNumber(vital.getPatientNumber());
 	}
-	
-	
+	 
 	 }
