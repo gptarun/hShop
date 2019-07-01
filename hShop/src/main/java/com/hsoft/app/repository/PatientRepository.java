@@ -23,5 +23,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
 	@Query(value = "select currval('patient_seq')", nativeQuery = true)
 	long currentValue();
+	
+	
 
 }
