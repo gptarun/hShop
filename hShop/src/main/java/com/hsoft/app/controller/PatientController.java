@@ -476,6 +476,11 @@ public class PatientController {
 		}
 	}
 
+	@PostMapping("/findScheme")
+	public Scheme getScheme(@RequestBody Scheme scheme) {
+		return schemeRepo.findByInsuranceName(scheme.getInsuranceName());
+	}
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
 	 ********************************************************************************************************************************
@@ -519,11 +524,6 @@ public class PatientController {
 	@GetMapping("/getSchemes")
 	public List<Scheme> getScheme() {
 		return schemeRepo.findAll();
-	}
-
-	@GetMapping("/getScheme")
-	public Scheme getScheme(@RequestBody Scheme scheme) {
-		return schemeRepo.findByInsuranceName(scheme.getInsuranceName());
 	}
 
 	@GetMapping("/getPatientHistories")

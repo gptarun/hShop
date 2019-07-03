@@ -1,6 +1,5 @@
 package com.hsoft.app.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Drug;
-import com.hsoft.app.model.PatientDrug;
 import com.hsoft.app.repository.DrugRepository;
-import com.hsoft.app.repository.PatientDrugRepository;
 
 /**
  * 
@@ -27,9 +24,10 @@ public class PharmacyController {
 
 	@Autowired
 	DrugRepository drugRepo;
-	
-	@Autowired 
-	PatientDrugRepository patientDrugRepo;
+
+	/*
+	 * @Autowired PatientDrugRepository patientDrugRepo;
+	 */
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -67,24 +65,18 @@ public class PharmacyController {
 			return response;
 		}
 	}
-		@PostMapping("/PatientDrugMapping")
-		public ResponseModel PatientDrugMapping(@RequestBody PatientDrug patientdrug) {
-			ResponseModel response = new ResponseModel();
-			try { 
-				patientDrugRepo.save(patientdrug);  
-				response.setStatus(HShopConstant.TRUE);
-				response.setMessage("Drugs has been mapped");
-				return response;
-			} catch (Exception e) {
-				response.setStatus(HShopConstant.FALSE);
-				response.setMessage(e.toString());
-				response.setData(null);
-				return response;
-			}
 
-					}
-		
-	
+	/*
+	 * @PostMapping("/PatientDrugMapping") public ResponseModel
+	 * PatientDrugMapping(@RequestBody PatientDrug patientdrug) { ResponseModel
+	 * response = new ResponseModel(); try { patientDrugRepo.save(patientdrug);
+	 * response.setStatus(HShopConstant.TRUE);
+	 * response.setMessage("Drugs has been mapped"); return response; } catch
+	 * (Exception e) { response.setStatus(HShopConstant.FALSE);
+	 * response.setMessage(e.toString()); response.setData(null); return response; }
+	 * 
+	 * }
+	 */
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************

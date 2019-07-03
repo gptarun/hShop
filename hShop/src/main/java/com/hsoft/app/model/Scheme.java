@@ -22,8 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "scheme", uniqueConstraints = { @UniqueConstraint(columnNames = "scheme_type"),
-		@UniqueConstraint(columnNames = "email") })
+@Table(name = "scheme", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class Scheme {
@@ -175,5 +174,5 @@ public class Scheme {
 	public void setPlans(List<Plan> plans) {
 		this.plans = plans;
 	}
-	
+
 }
