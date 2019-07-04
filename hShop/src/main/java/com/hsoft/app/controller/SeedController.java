@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
+import com.hsoft.app.model.Department;
 import com.hsoft.app.model.ICDCodes;
 import com.hsoft.app.model.Laboratory;
 import com.hsoft.app.model.OperationCode;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Radiology;
+import com.hsoft.app.repository.DepartmentRepository;
 import com.hsoft.app.repository.ICDCodesRepository;
 import com.hsoft.app.repository.LaboratoryRepository;
 import com.hsoft.app.repository.OperationCodeRepository;
@@ -48,6 +50,9 @@ public class SeedController {
 
 	@Autowired
 	OperationCodeRepository operationCodeRepo;
+	
+	@Autowired
+	DepartmentRepository departmentRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -181,6 +186,24 @@ public class SeedController {
 			response.setMessage("Operation code has been added");
 			return response;
 		} catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	@PostMapping("/deleteDepartment")
+	public ResponseModel deleteDepartment(@RequestBody Department department ) {
+		ResponseModel response = new ResponseModel();
+		try {
+			 departmentRepo.deleteDepartment(department.getDepId());
+			 response.setStatus(HShopConstant.TRUE);
+			 response.setMessage("Department has been deleted");
+			 return response;
+			 
+			
+		}catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage(e.toString());
 			response.setData(null);

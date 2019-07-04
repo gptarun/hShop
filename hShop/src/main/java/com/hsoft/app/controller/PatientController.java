@@ -480,6 +480,9 @@ public class PatientController {
 	public Scheme getScheme(@RequestBody Scheme scheme) {
 		return schemeRepo.findByInsuranceName(scheme.getInsuranceName());
 	}
+	
+	
+
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
