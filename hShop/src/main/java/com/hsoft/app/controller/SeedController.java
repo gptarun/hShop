@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Department;
+import com.hsoft.app.model.GlobalSettings;
 import com.hsoft.app.model.ICDCodes;
 import com.hsoft.app.model.Laboratory;
 import com.hsoft.app.model.OperationCode;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Radiology;
 import com.hsoft.app.repository.DepartmentRepository;
+import com.hsoft.app.repository.GlobalSettingsRepository;
 import com.hsoft.app.repository.ICDCodesRepository;
 import com.hsoft.app.repository.LaboratoryRepository;
 import com.hsoft.app.repository.OperationCodeRepository;
@@ -53,6 +55,9 @@ public class SeedController {
 	
 	@Autowired
 	DepartmentRepository departmentRepo;
+	
+	@Autowired
+	GlobalSettingsRepository globalSettingsRepo;
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
@@ -210,6 +215,44 @@ public class SeedController {
 			return response;
 		}
 	}
+	
+	@PostMapping("/createUpdateGlobalSettings")
+	public ResponseModel createUpdateGlobalSettings(@RequestBody GlobalSettings globalSettings) {
+		ResponseModel response = new ResponseModel();
+		try {
+		globalSettingsRepo.save(globalSettings);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("Global Settings Updated");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	@PostMapping("/deleteGlobalSettings")
+	public ResponseModel deleteGlobalSettings(@RequestBody GlobalSettings globalSettings ) {
+		ResponseModel response = new ResponseModel();
+		try {
+			 globalSettingsRepo.deleteGlobalSettings(globalSettings.getGlobalSettingId());
+			 response.setStatus(HShopConstant.TRUE);
+			 response.setMessage("Global Setting has been deleted");
+			 return response;
+			 
+			
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+		
+	@PostMapping("/findGlobalSettings")
+	public GlobalSettings getGlobalSettings(@RequestBody GlobalSettings globalSettings) {
+		return globalSettingsRepo.findByLocationName(globalSettings.getLocationName());
+	}
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
@@ -255,5 +298,15 @@ public class SeedController {
 		responseModel.setData(operationCodeRepo.findAll());
 		return responseModel;
 	}
+	
+	@GetMapping("/getGlobalSettings")
+	public ResponseModel getGlobalSettings() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All GlobalSettings found");
+		responseModel.setData(globalSettingsRepo.findAll());
+		return responseModel;
+	}
 
+	
 }

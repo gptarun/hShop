@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.bean.RoleModule;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Department;
+import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Location;
 import com.hsoft.app.model.Module;
 import com.hsoft.app.model.ParentModule;
@@ -190,6 +192,26 @@ public class HSoftController {
 			return response;
 		}
 	}
+	
+
+	@PostMapping("/deleteLocation")
+	public ResponseModel deleteLocation(@RequestBody Location location ) {
+		ResponseModel response = new ResponseModel();
+		try {
+			 locationRepo.deleteLocation(location.getLocationName());
+			 response.setStatus(HShopConstant.TRUE);
+			 response.setMessage("Location has been deleted");
+			 return response;
+			 
+			
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+
 
 	@PostMapping("/createUserLog")
 	public Map<String, String> createLog(@RequestBody TransactionLog transactionLog) {
