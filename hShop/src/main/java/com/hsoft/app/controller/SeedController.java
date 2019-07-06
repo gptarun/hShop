@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
+import com.hsoft.app.model.Country;
 import com.hsoft.app.model.Department;
 import com.hsoft.app.model.EthinicGroup;
 import com.hsoft.app.model.GlobalSettings;
@@ -23,6 +24,8 @@ import com.hsoft.app.model.OperationCode;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Radiology;
 import com.hsoft.app.model.Religion;
+import com.hsoft.app.model.State;
+import com.hsoft.app.repository.CountryRepository;
 import com.hsoft.app.repository.DepartmentRepository;
 import com.hsoft.app.repository.EthinicGroupRepository;
 import com.hsoft.app.repository.GlobalSettingsRepository;
@@ -33,6 +36,7 @@ import com.hsoft.app.repository.OperationCodeRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.RadiologyRepository;
 import com.hsoft.app.repository.ReligionRepository;
+import com.hsoft.app.repository.StateRepository;
 
 /**
  * 
@@ -74,6 +78,11 @@ public class SeedController {
 	@Autowired
 	OccupationRepository occupationRepo;
 	
+	@Autowired
+	CountryRepository countryRepo;
+	
+	@Autowired
+	StateRepository stateRepo;
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
 	 ********************************************************************************************************************************
@@ -318,6 +327,39 @@ public class SeedController {
 		}
 	}
 	
+	@PostMapping("/createUpdateCountry")
+	public ResponseModel createUpdateCountry(@RequestBody Country country) {
+		ResponseModel response = new ResponseModel();
+		try {
+	       countryRepo.save(country);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("Country has been added");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	
+	
+	@PostMapping("/createUpdateState")
+	public ResponseModel createUpdateState(@RequestBody State state) {
+		ResponseModel response = new ResponseModel();
+		try {
+	       stateRepo.save(state);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("State has been added");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
@@ -400,4 +442,22 @@ public class SeedController {
 		return responseModel;
 	}
 
+	@GetMapping("/getAllCountries")
+	public ResponseModel getAllCountries() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All countries found");
+		responseModel.setData(countryRepo.findAll());
+		return responseModel;
+	}
+
+
+	@GetMapping("/getAllStates")
+	public ResponseModel getAllStates() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All States found");
+		responseModel.setData(stateRepo.findAll());
+		return responseModel;
+	}
 }
