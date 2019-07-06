@@ -20,7 +20,6 @@ import com.hsoft.app.model.AppointmentBooking;
 import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.CodingIndexing;
 import com.hsoft.app.model.Doctor;
-import com.hsoft.app.model.GlobalSettings;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PatientHistory;
@@ -299,18 +298,17 @@ public class PatientController {
 			return response;
 		}
 	}
-	
+
 	@PostMapping("/deleteDoctor")
-	public ResponseModel deleteDoctor(@RequestBody Doctor doctor ) {
+	public ResponseModel deleteDoctor(@RequestBody Doctor doctor) {
 		ResponseModel response = new ResponseModel();
 		try {
-			 doctorRepo.deleteDoctor(doctor.getDoctorName());
-			 response.setStatus(HShopConstant.TRUE);
-			 response.setMessage("Doctor has been deleted");
-			 return response;
-			 
-			
-		}catch (Exception e) {
+			doctorRepo.deleteDoctor(doctor.getDoctorName());
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("Doctor has been deleted");
+			return response;
+
+		} catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
 			response.setMessage(e.toString());
 			response.setData(null);
@@ -482,9 +480,6 @@ public class PatientController {
 	public Scheme getScheme(@RequestBody Scheme scheme) {
 		return schemeRepo.findBySchemeName(scheme.getSchemeName());
 	}
-	
-	
-
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
@@ -559,6 +554,15 @@ public class PatientController {
 			unoccupiedBeds.add(0L);
 			return unoccupiedBeds;
 		}
+	}
+
+	@GetMapping("/getSchemeNameList")
+	public ResponseModel getSchemeNameList() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("Patient Id Number mapping found");
+		responseModel.setData(schemeRepo.getSchemeNameList());
+		return responseModel;
 	}
 
 }
