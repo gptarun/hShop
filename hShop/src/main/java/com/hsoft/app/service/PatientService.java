@@ -2,12 +2,15 @@ package com.hsoft.app.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hsoft.app.bean.WardBean;
@@ -36,6 +39,9 @@ public class PatientService {
 
 	@Autowired
 	WardRepository wardRepo;
+
+	@Value("${file.upload-dir}")
+	private String imageLocation;
 
 	public String getPatientImage(String patientNumber) throws URISyntaxException {
 		String encodedImage = "";
@@ -103,7 +109,7 @@ public class PatientService {
 
 	}
 
-	public void PatientWardTransferHistory(WardBean wardBean) {
+	public void patientWardTransferHistory(WardBean wardBean) {
 		List<PatientHistory> patienthistory = patientHistoryRepo.findByPatientNumber(wardBean.getAssignedPatientId());
 		for (PatientHistory patienthist : patienthistory)
 			if (patienthist.isActive()) {
@@ -115,7 +121,19 @@ public class PatientService {
 				patienthist.setConsultingDoctor(wardBean.getDoctorName());
 				patientHistoryRepo.save(patienthist);
 			}
-
 	}
 
+	public void saveUserImage(String saveImage, String patientNumber) {
+		try {
+			if (saveImage != null && !saveImage.isEmpty()) {
+				File file = new File(imageLocation + patientNumber + ".jpg");
+				byte[] byteImage = Base64.decodeBase64(saveImage);
+				OutputStream os = new FileOutputStream(file);
+				os.write(byteImage);
+				os.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

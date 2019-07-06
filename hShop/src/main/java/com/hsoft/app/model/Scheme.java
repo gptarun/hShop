@@ -35,8 +35,8 @@ public class Scheme {
 	@Column(name = "scheme_type")
 	private String schemeType;
 
-	@Column(name = "insurance_name")
-	private String insuranceName;
+	@Column(name = "scheme_name")
+	private String schemeName;
 
 	@Column(name = "insurance_code")
 	private String insuranceCode;
@@ -87,20 +87,20 @@ public class Scheme {
 		this.schemeType = schemeType;
 	}
 
-	public String getInsuranceName() {
-		return insuranceName;
+	public String getSchemeName() {
+		return schemeName;
 	}
 
-	public void setInsuranceName(String insuranceName) {
-		this.insuranceName = insuranceName;
+	public void setSchemeName(String schemeName) {
+		this.schemeName = schemeName;
 	}
 
 	public String getInsuranceCode() {
 		return insuranceCode;
 	}
 
-	public void setInsuranceCode(String insuranceCode) {
-		this.insuranceCode = insuranceCode;
+	public void setInsuranceCode(String schemeName) {
+		this.insuranceCode = schemeName;
 	}
 
 	public String getPhoneNumber() {
