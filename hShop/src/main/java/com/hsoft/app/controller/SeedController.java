@@ -14,19 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Department;
+import com.hsoft.app.model.EthinicGroup;
 import com.hsoft.app.model.GlobalSettings;
 import com.hsoft.app.model.ICDCodes;
 import com.hsoft.app.model.Laboratory;
+import com.hsoft.app.model.Occupation;
 import com.hsoft.app.model.OperationCode;
 import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Radiology;
+import com.hsoft.app.model.Religion;
 import com.hsoft.app.repository.DepartmentRepository;
+import com.hsoft.app.repository.EthinicGroupRepository;
 import com.hsoft.app.repository.GlobalSettingsRepository;
 import com.hsoft.app.repository.ICDCodesRepository;
 import com.hsoft.app.repository.LaboratoryRepository;
+import com.hsoft.app.repository.OccupationRepository;
 import com.hsoft.app.repository.OperationCodeRepository;
 import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.RadiologyRepository;
+import com.hsoft.app.repository.ReligionRepository;
 
 /**
  * 
@@ -58,7 +64,16 @@ public class SeedController {
 	
 	@Autowired
 	GlobalSettingsRepository globalSettingsRepo;
+	
+	@Autowired
+	ReligionRepository religionRepo;
 
+	@Autowired
+	EthinicGroupRepository ethinicGroupRepo;
+	
+	@Autowired
+	OccupationRepository occupationRepo;
+	
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
 	 ********************************************************************************************************************************
@@ -253,6 +268,56 @@ public class SeedController {
 	public GlobalSettings getGlobalSettings(@RequestBody GlobalSettings globalSettings) {
 		return globalSettingsRepo.findByLocationName(globalSettings.getLocationName());
 	}
+	
+	
+	@PostMapping("/createUpdateReligion")
+	public ResponseModel createUpdateReligion(@RequestBody Religion religion) {
+		ResponseModel response = new ResponseModel();
+		try {
+	       religionRepo.save(religion);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("Religion has been added");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	@PostMapping("/createUpdateEthinicGroup")
+	public ResponseModel createUpdateEthinicGroup(@RequestBody EthinicGroup ethinicGroup) {
+		ResponseModel response = new ResponseModel();
+		try {
+	       ethinicGroupRepo.save(ethinicGroup);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("Ethinic Group has been added");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	@PostMapping("/createUpdateOccupation")
+	public ResponseModel createUpdateOccupation(@RequestBody Occupation occupation) {
+		ResponseModel response = new ResponseModel();
+		try {
+	       occupationRepo.save(occupation);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("Ocupation has been added");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
 
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
@@ -307,6 +372,32 @@ public class SeedController {
 		responseModel.setData(globalSettingsRepo.findAll());
 		return responseModel;
 	}
-
 	
+	@GetMapping("/getAllReligions")
+	public ResponseModel getAllReligions() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All religions found");
+		responseModel.setData(religionRepo.findAll());
+		return responseModel;
+	}
+
+	@GetMapping("/getAllEthinicGroup")
+	public ResponseModel getAllEthinicGroup() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All Ethinic Group found");
+		responseModel.setData(ethinicGroupRepo.findAll());
+		return responseModel;
+	}
+	
+	@GetMapping("/getAllOccupation")
+	public ResponseModel getAllOccupation() {
+		ResponseModel responseModel = new ResponseModel();
+		responseModel.setStatus(HShopConstant.TRUE);
+		responseModel.setMessage("All occupation found");
+		responseModel.setData(occupationRepo.findAll());
+		return responseModel;
+	}
+
 }
