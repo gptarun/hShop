@@ -320,6 +320,9 @@ public class PatientController {
 	public Map<String, String> createScheme(@RequestBody Scheme scheme) {
 		Map<String, String> response = new HashMap<>();
 		try {
+			if (scheme != null && scheme.getSchemeId() != 0) {
+				patientService.updateSchemeDetails(scheme);
+			}
 			schemeRepo.save(scheme);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Scheme has been created");

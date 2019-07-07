@@ -18,7 +18,6 @@ import com.hsoft.app.bean.ResponseModel;
 import com.hsoft.app.bean.RoleModule;
 import com.hsoft.app.constant.HShopConstant;
 import com.hsoft.app.model.Department;
-import com.hsoft.app.model.Doctor;
 import com.hsoft.app.model.Location;
 import com.hsoft.app.model.Module;
 import com.hsoft.app.model.ParentModule;

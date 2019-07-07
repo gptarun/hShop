@@ -17,9 +17,11 @@ import com.hsoft.app.bean.WardBean;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PatientHistory;
+import com.hsoft.app.model.Scheme;
 import com.hsoft.app.model.Ward;
 import com.hsoft.app.model.WardBedTab;
 import com.hsoft.app.repository.PatientHistoryRepository;
+import com.hsoft.app.repository.SchemeRepository;
 import com.hsoft.app.repository.WardBedTabRepository;
 import com.hsoft.app.repository.WardRepository;
 
@@ -39,6 +41,9 @@ public class PatientService {
 
 	@Autowired
 	WardRepository wardRepo;
+
+	@Autowired
+	SchemeRepository schemeRepo;
 
 	@Value("${file.upload-dir}")
 	private String imageLocation;
@@ -131,6 +136,18 @@ public class PatientService {
 				OutputStream os = new FileOutputStream(file);
 				os.write(byteImage);
 				os.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateSchemeDetails(Scheme scheme) {
+		try {
+			List<Long> planIds = schemeRepo.getPlanIds(scheme.getSchemeId());
+			schemeRepo.deletePlanSchemeMapping(scheme.getSchemeId());
+			for (Long planId : planIds) {
+				schemeRepo.deletePlan(planId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
