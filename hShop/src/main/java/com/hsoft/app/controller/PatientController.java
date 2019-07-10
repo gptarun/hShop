@@ -20,6 +20,7 @@ import com.hsoft.app.model.AppointmentBooking;
 import com.hsoft.app.model.Bed;
 import com.hsoft.app.model.CodingIndexing;
 import com.hsoft.app.model.Doctor;
+import com.hsoft.app.model.GlobalSettings;
 import com.hsoft.app.model.Patient;
 import com.hsoft.app.model.PatientDischarge;
 import com.hsoft.app.model.PatientHistory;
@@ -265,12 +266,14 @@ public class PatientController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			String assignpatient = wardBean.getAssignedPatientId();
+			WardBedTab assign = wardBedRepo.findByAssignedPatientId(wardBean.getAssignedPatientId());
+			String assigndoctor = assign.getDoctorName();
 			wardBedRepo.save(patientService.clearPatientBed(assignpatient));
 			WardBedTab trasnsferredBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(),
 					wardBean.getBedId().get(0));
 			trasnsferredBed.setAssignedPatientId(assignpatient);
 			trasnsferredBed.setAdmissionDate(wardBean.getAdmissionDate());
-			trasnsferredBed.setDoctorName(wardBean.getDoctorName());
+			trasnsferredBed.setDoctorName(assigndoctor);
 			wardBedRepo.save(trasnsferredBed);
 			patientService.patientWardTransferHistory(wardBean);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
@@ -320,9 +323,6 @@ public class PatientController {
 	public Map<String, String> createScheme(@RequestBody Scheme scheme) {
 		Map<String, String> response = new HashMap<>();
 		try {
-			if (scheme != null && scheme.getSchemeId() != 0) {
-				patientService.updateSchemeDetails(scheme);
-			}
 			schemeRepo.save(scheme);
 			response.put(HShopConstant.STATUS, HShopConstant.TRUE);
 			response.put(HShopConstant.MESSAGE, "Scheme has been created");
@@ -484,6 +484,33 @@ public class PatientController {
 		return schemeRepo.findBySchemeName(scheme.getSchemeName());
 	}
 
+	@PostMapping("/findPatientWithwardBed")
+	public ResponseModel getPatientWithWardBed(@RequestBody Patient patient) {
+		Patient patientObj;
+		List<Object> list = new ArrayList<Object>();
+		ResponseModel response = new ResponseModel();
+		try {
+			String encodedImage = patientService.getPatientImage(patient.getPatientNumber());
+			patientObj = patientRepo.findByPatientNumber(patient.getPatientNumber());
+			patientObj.setEncodedImage(encodedImage);
+			WardBedTab wardBed = wardBedRepo.findByAssignedPatientId(patient.getPatientNumber());
+			list.add(patientObj);
+			list.add(wardBed);
+			response.setData(list);
+			response.setStatus(HShopConstant.TRUE);
+			response.setMessage("patient ward bed found");
+			return response;
+
+		} catch (Exception e) {
+
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage("No Coding and indexing found for the Patient");
+			response.setData(null);
+			return response;
+		}
+
+	}
+
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE GET MAPPINGS*********************************************************
 	 ********************************************************************************************************************************
@@ -557,15 +584,6 @@ public class PatientController {
 			unoccupiedBeds.add(0L);
 			return unoccupiedBeds;
 		}
-	}
-
-	@GetMapping("/getSchemeNameList")
-	public ResponseModel getSchemeNameList() {
-		ResponseModel responseModel = new ResponseModel();
-		responseModel.setStatus(HShopConstant.TRUE);
-		responseModel.setMessage("Patient Id Number mapping found");
-		responseModel.setData(schemeRepo.getSchemeNameList());
-		return responseModel;
 	}
 
 }
