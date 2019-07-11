@@ -243,6 +243,9 @@ public class PatientController {
 	public Map<String, Object> assignBed(@RequestBody WardBean wardBean) {
 		Map<String, Object> response = new HashMap<>();
 		try {
+			 WardBedTab wards=wardBedRepo.findByAssignedPatientId(wardBean.getAssignedPatientId()); 
+			 if(wards==null)
+			 {
 			WardBedTab wardBed = wardBedRepo.findByWardIdAndBedId(wardBean.getWardId(), wardBean.getBedId().get(0));
 			wardBed.setAssignedPatientId(wardBean.getAssignedPatientId());
 			wardBed.setDoctorName(wardBean.getDoctorName());
@@ -254,6 +257,13 @@ public class PatientController {
 			response.put(HShopConstant.MESSAGE, "Patient has been assigned");
 			response.put(HShopConstant.DATA, wardBed);
 			return response;
+			 }
+			 else
+			 {
+				    response.put(HShopConstant.STATUS, HShopConstant.TRUE);
+					response.put(HShopConstant.MESSAGE, "Patient has been already admitted");
+					return response;
+			 }
 		} catch (Exception e) {
 			response.put(HShopConstant.STATUS, HShopConstant.FALSE);
 			response.put(HShopConstant.MESSAGE, e.toString());
