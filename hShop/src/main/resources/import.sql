@@ -30,3 +30,21 @@ INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (14, 
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (15, 'Location Setting', '2');
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (16, 'Password Reset', '2');
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (17, 'Drug Register', '6');
+
+insert into role_module (module_id, role_id, role_module_id) values (1,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (2,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (3,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (4,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (5,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (6,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (7,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (8,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (9,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (10,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (11,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (12,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (13,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (14,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (15,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (16,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (17,1000,nextval('role_module_seq'));
