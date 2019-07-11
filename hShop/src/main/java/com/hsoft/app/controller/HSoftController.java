@@ -287,6 +287,34 @@ public class HSoftController {
 			return response;
 		}
 	}
+	
+	@PostMapping("/getRolemodulesById")
+	public ResponseModel getRolemodulesById(@RequestBody Role role ) {
+		ResponseModel response=new ResponseModel();
+		try {
+			
+			List<RoleModuleTab> roleModuleId = roleModuleRepo
+					.findModuleIdByRoleId(role.getRoleId());
+			List<Module> modules = new ArrayList<>();
+
+			for (RoleModuleTab roleModuleTab : roleModuleId) {
+				modules.add(moduleRepo.findByModuleId((roleModuleTab.getModuleId())));
+			}
+            response.setStatus(HShopConstant.TRUE);
+			response.setMessage("modeules are found");
+			response.setData(modules);
+			return response;
+		} catch (Exception e) {
+			
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	
+	
 
 	/**
 	 * Update queries from here......
