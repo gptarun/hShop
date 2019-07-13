@@ -25,6 +25,7 @@ import com.hsoft.app.model.PrefixSuffix;
 import com.hsoft.app.model.Radiology;
 import com.hsoft.app.model.Religion;
 import com.hsoft.app.model.State;
+import com.hsoft.app.model.Surgery;
 import com.hsoft.app.repository.CountryRepository;
 import com.hsoft.app.repository.DepartmentRepository;
 import com.hsoft.app.repository.EthinicGroupRepository;
@@ -37,6 +38,7 @@ import com.hsoft.app.repository.PrefixSuffixRepository;
 import com.hsoft.app.repository.RadiologyRepository;
 import com.hsoft.app.repository.ReligionRepository;
 import com.hsoft.app.repository.StateRepository;
+import com.hsoft.app.repository.SurgeryRepository;
 
 /**
  * 
@@ -83,6 +85,11 @@ public class SeedController {
 	
 	@Autowired
 	StateRepository stateRepo;
+	
+	@Autowired
+	SurgeryRepository surgeryRepo;
+	
+	
 	/********************************************************************************************************************************
 	 ************************************************** ALL THE POST MAPPINGS********************************************************
 	 ********************************************************************************************************************************
@@ -352,6 +359,22 @@ public class SeedController {
 	       stateRepo.save(state);
 		response.setStatus(HShopConstant.TRUE);
 		response.setMessage("State has been added");
+		return response;
+		}catch (Exception e) {
+			response.setStatus(HShopConstant.FALSE);
+			response.setMessage(e.toString());
+			response.setData(null);
+			return response;
+		}
+	}
+	
+	@PostMapping("/createUpdateSurgery")
+	public ResponseModel createUpdateSurgery(@RequestBody Surgery surgery) {
+		ResponseModel response = new ResponseModel();
+		try {
+	       surgeryRepo.save(surgery);
+		response.setStatus(HShopConstant.TRUE);
+		response.setMessage("Surgery has been added");
 		return response;
 		}catch (Exception e) {
 			response.setStatus(HShopConstant.FALSE);
