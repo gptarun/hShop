@@ -30,6 +30,7 @@ INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (14, 
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (15, 'Location Setting', '2');
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (16, 'Password Reset', '2');
 INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (17, 'Drug Register', '6');
+INSERT INTO public.module(module_id, module_name, parent_module_id) VALUES (18, 'clerking Desk', '7');
 
 insert into role_module (module_id, role_id, role_module_id) values (1,1000,nextval('role_module_seq'));
 insert into role_module (module_id, role_id, role_module_id) values (2,1000,nextval('role_module_seq'));
@@ -48,3 +49,5 @@ insert into role_module (module_id, role_id, role_module_id) values (14,1000,nex
 insert into role_module (module_id, role_id, role_module_id) values (15,1000,nextval('role_module_seq'));
 insert into role_module (module_id, role_id, role_module_id) values (16,1000,nextval('role_module_seq'));
 insert into role_module (module_id, role_id, role_module_id) values (17,1000,nextval('role_module_seq'));
+insert into role_module (module_id, role_id, role_module_id) values (18,1000,nextval('role_module_seq'));
+
